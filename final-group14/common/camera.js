@@ -139,3 +139,86 @@ class OrbiterCameraController {
         this.camera.viewMatrix = M4.invert(this.camera.cameraMatrix);
     }
 }
+
+    class InputCameraController {
+        canvas;
+        camera;         // the camera to be controlled.
+        target;         // the point the camera should orbit around.
+        distance;       // distance of the camera to the target.
+        zoomSpeed;      // speed to zoom in/out with the mousewheel
+        PitchRotationSpeed;
+        YawRotationSpeed;
+        movementSpeed;  // speed to move up and down when holding "shift".
+        pitch;          // current pitch of the camera.
+        yaw;            // current yaw of the camera.
+        offsetY;        // current height offset to the target of the camera.
+    
+        /** Creates a new OrbiterCameraController object
+        * @param {Canvas} canvas the canvas the camera draws on.
+        * @param {PerspectiveCamera} camera the camera to be controlled by this controller.
+        * @param {V3} target the point the camera should orbit around.
+        * @param {number} distance distance of the camera to the target.
+        * @param {number} zoomSpeed speed to zoom in/out with the mousewheel
+        * @param {number} rotationSpeed speed to orbit around the target when moving the mouse.
+        * @param {number} movementSpeed speed to move up and down when holding "shift".
+        * @param {number} startingPitch pitch of the camera when starting.
+        * @param {number} tartingYaw yaw of the camera when starting.
+        */
+        constructor(canvas, camera, target, distance, zoomSpeed, startingPitch, startingYaw){
+            this.canvas = canvas;
+            this.camera = camera;
+            this.target = target || V3.ZERO;
+            this.distance = distance || 0;
+            this.zoomSpeed = zoomSpeed || 500;
+            this.YawRotationSpeed = 0;
+            this.PitchRotationSpeed = 0;
+            this.movementSpeed = 0;
+            this.pitch = startingPitch || 0;
+            this.yaw = startingYaw || 0;
+            this.offsetZ = 0;
+        }
+    
+        /** Updates the controller and the camera matrix of the controlled camera.
+        * Call during update phase.
+        */
+        update(){
+            if (Input.keyDown("w")){
+                this.movementSpeed -= 0.01;
+            }
+            if (Input.keyDown("s")){
+                if (this.movementSpeed < 0){
+                    this.movementSpeed+= 0.01; 
+                }
+            }
+            if (Input.keyDown("q")){
+                if (this.PitchRotationSpeed < 1){
+                    this.PitchRotationSpeed += 0.05; 
+                }
+            }
+            if (Input.keyDown("e")){
+                if (this.PitchRotationSpeed > -1){
+                    this.PitchRotationSpeed -= 0.05; 
+                }
+            }
+            if (Input.keyDown("a")){
+                if (this.YawRotationSpeed < 1){
+                    this.YawRotationSpeed += 0.1; 
+                }
+            }
+            if (Input.keyDown("d")){
+                if (this.YawRotationSpeed > -1){
+                    this.YawRotationSpeed -= 0.1; 
+                }
+            }
+            this.pitch += this.PitchRotationSpeed;
+            this.yaw += this.YawRotationSpeed;
+            this.offsetZ += this.movementSpeed;
+
+            this.camera.cameraMatrix = M4.translationMatrix(this.target.x ,this.target.y, this.offsetZ + this.target.z);
+            this.camera.cameraMatrix = M4.multM4(this.camera.cameraMatrix, M4.rotationMatrixY(this.yaw));
+            this.camera.cameraMatrix= M4.multM4(this.camera.cameraMatrix, M4.rotationMatrixX(this.pitch));
+            this.camera.cameraMatrix = M4.multM4(this.camera.cameraMatrix, M4.translationMatrix(0,0,this.distance));
+
+            this.camera.viewMatrix = M4.invert(this.camera.cameraMatrix);
+        }
+}

@@ -16,6 +16,7 @@ uniform mat3 u_matrixInvTransM;
 varying vec3 v_normal;    // normal to forward to the fragment shader
 
 //Point Light Additions
+uniform mat4 u_world;
 uniform vec3 u_lightWorldPosition;
 varying vec3 v_surfaceToLight;
 
@@ -28,10 +29,10 @@ void main() {
     //TODO: Transfer texCoord attribute value to varying
     v_texcoord = a_texcoord;
 
-    gl_Position = u_matrixP * u_matrixV * u_matrixM * vec4 (a_position, 1);
-
-    vec3 surfaceWorldPosition = (u_matrixP * vec4 (a_position, 1)).xyz;
+    vec3 surfaceWorldPosition = (u_world * vec4 (a_position, 1)).xyz;
     v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
+
+    gl_Position = u_matrixP * u_matrixV * u_matrixM * vec4 (a_position, 1);
 }
 
 #endif
