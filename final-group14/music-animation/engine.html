@@ -19,6 +19,7 @@
     <script src="../common/objparser.js"></script>
 
     <script src="renderer.js"></script>
+    <script src="pointLightRenderer.js"></script>
     <script src="modeltransform.js"></script>
     <script src="primitives.js"></script>
 
@@ -53,7 +54,7 @@
 
         var g_grid;
 
-        var g_renderer, skyBox_renderer; // creating skyBox_renderer
+        var g_renderer, skyBox_renderer, g_pointLightRenderer;
 
         var timer = 0;
         var music;
@@ -67,6 +68,8 @@
             directionalLight: new V3(-0.2, -0.5, -0.5).normalize(), // light direction
             directionalColor: new V3(1.0, 1.0, 1.0), // light color by default white
             ambientColor: new V3(0.2, 0.2, 0.2), // dark gray
+            pointLight: new V3(3,0,0), // point light position?
+            pointLightColor: new V3(0.98, 0.46, 0), // point light color
         };
 
         function setup(){
@@ -80,7 +83,7 @@
             // our shader files are loaded here. Once completed, init is called
             // for now there is only the standardShader, but you can add more by
             // simply adding another path into the array shaderPaths.
-            let shaderPaths = ["shaders/standardShader.glsl", "shaders/skyBoxShader.glsl"]; 
+            let shaderPaths = ["shaders/standardShader.glsl", "shaders/skyBoxShader.glsl", "shaders/pointLightShader.glsl"]; 
             GLUtils.loadShaders(shaderPaths, init);
         }
 
@@ -96,7 +99,8 @@
             music.mute(gui_data.mute);
 
             g_renderer = new Renderer("standardShader");
-            skyBox_renderer = new Renderer("skyBoxShader"); 
+            //skyBox_renderer = new Renderer("skyBoxShader"); 
+            g_pointLightRenderer = new PointLightRenderer("pointLightShader");
 
             g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
             g_cameraController = new OrbiterCameraController(canvas, g_camera);
@@ -141,9 +145,9 @@
             let shaderData = { lightingData: g_lightingData};
 
             g_renderer.drawModel(sphere, g_camera, shaderData);
-            g_renderer.drawModel(cylinder, g_camera, shaderData);
+            g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
             g_renderer.drawModel(pyramid, g_camera, shaderData);
-            skyBox_renderer.drawModel(skyBox); // put skybox on screem 
+            //skyBox_renderer.drawModel(skyBox); // put skybox on screem 
 
 
             g_grid.draw(g_camera);
