@@ -115,16 +115,10 @@
             sphere = new ModelTransform(Primitives.Sphere.getMesh(), gasGiantMat);
             cylinder = new ModelTransform(Primitives.Cylinder.getMesh(), starMat);
             pyramid = new ModelTransform(Primitives.Pyramid.getMesh(), starMat);
-            cube = new ModelTransform(Primitives.Cube.getMesh(), scifiMat);
-            quad = new ModelTransform(Primitives.Quad.getMesh(), scifiFloorMat);
 
             sphere.position.set(1.5,0,-1.5);
             cylinder.position.set(-1.5,0,-1.5);
             pyramid.position.set(1.5,0.5,1.5);
-            cube.position.set(1.5,0,1.5);
-            quad.position.set(0,-1,0);
-            quad.rotation.set(-90,0,0);
-            quad.scale.set(5,5,5);
 
             g_grid = new GridAxis();
 
@@ -140,16 +134,12 @@
             sphere.update();
             cylinder.update();
             pyramid.update();
-            cube.update();
-            quad.update();
 
             let shaderData = { lightingData: g_lightingData};
 
             g_renderer.drawModel(sphere, g_camera, shaderData);
             g_renderer.drawModel(cylinder, g_camera, shaderData);
             g_renderer.drawModel(pyramid, g_camera, shaderData);
-            g_renderer.drawModel(cube, g_camera, shaderData);
-            g_renderer.drawModel(quad, g_camera, shaderData);
 
             g_grid.draw(g_camera);
         }
