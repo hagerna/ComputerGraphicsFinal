@@ -240,4 +240,50 @@ For example in Atom install atom-live-server package and start with Packages -> 
         TextureCache[name] = texture;
         return texture;
     }
+
+    static loadCubeMap (name,
+        imgSrcPositiveX, imgSrcNegativeX,
+        imgSrcPositiveY, imgSrcNegativeY,
+        imgSrcPositiveZ, imgSrcNegativeZ){
+        // Create a texture.
+        let texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+        
+        // set up face information
+        const faceInfos = [
+        { target: gl.TEXTURE_CUBE_MAP_POSITIVE_X, src: imgSrcPositiveX }, // right 
+        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X, src: imgSrcNegativeX }, // left 
+        { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y, src: imgSrcPositiveY }, // top 
+        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, src: imgSrcNegativeY }, // bottpm
+        { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z, src: imgSrcPositiveZ }, // front 
+        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, src: imgSrcNegativeZ }  // bacl 
+        ];
+        let facesLoaded = 0;
+        
+        // for each face, set up temporary 1x1px texure and set image loading callback
+        faceInfos.forEach((faceInfo) => {
+        const {target, src} = faceInfo;
+        // Fill all the textures with a 1x1 blue pixel.
+        gl.texImage2D(target, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
+        
+        // Asynchronously load an image
+        let image = new Image();
+        image.onload = function() {
+        facesLoaded++;
+        // Now that the image has loaded make copy it to the texture.
+        gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); // flip y, since webgl uses inverse y texture cooridinates
+        gl.texImage2D(target, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        if(facesLoaded === 6)
+        gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+        };
+        image.onerror = function() {
+        console.error("Error loading image " + src);
+        };
+        image.src = src;
+        });
+        
+        TextureCache[name] = texture;
+        return texture;
+        }
 }
