@@ -49,11 +49,11 @@
         var g_camera;
         var g_cameraController;
 
-        var sphere, cylinder, pyramid, cube, quad;
+        var sphere, cylinder, pyramid, cube, quad, skyBox;
 
         var g_grid;
 
-        var g_renderer;
+        var g_renderer, skyBox_renderer; // creating skyBox_renderer
 
         var timer = 0;
         var music;
@@ -80,7 +80,7 @@
             // our shader files are loaded here. Once completed, init is called
             // for now there is only the standardShader, but you can add more by
             // simply adding another path into the array shaderPaths.
-            let shaderPaths = ["shaders/standardShader.glsl"];
+            let shaderPaths = ["shaders/standardShader.glsl", "shaders/skyBoxShader.glsl"]; 
             GLUtils.loadShaders(shaderPaths, init);
         }
 
@@ -96,6 +96,7 @@
             music.mute(gui_data.mute);
 
             g_renderer = new Renderer("standardShader");
+            skyBox_renderer = new Renderer("skyBoxShader"); 
 
             g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
             g_cameraController = new OrbiterCameraController(canvas, g_camera);
@@ -121,7 +122,9 @@
             pyramid.position.set(1.5,0.5,1.5);
 
             g_grid = new GridAxis();
-
+            
+            //loading cube space
+            skyBox = GLUtils.loadCubeMap("skyBox","resources/blue/bkg1_right.png","resources/blue/bkg1_left.png", "resources/blue/bkg1_top.png", "resources/blue/bkg1_bot.png", "resources/blue/bkg1_front.png", "resources/blue/bkg1_back.png"); 
             renderLoop = new RenderLoop(draw).start();
         }
 
@@ -140,6 +143,8 @@
             g_renderer.drawModel(sphere, g_camera, shaderData);
             g_renderer.drawModel(cylinder, g_camera, shaderData);
             g_renderer.drawModel(pyramid, g_camera, shaderData);
+            skyBox_renderer.drawModel(skyBox); // put skybox on screem 
+
 
             g_grid.draw(g_camera);
         }

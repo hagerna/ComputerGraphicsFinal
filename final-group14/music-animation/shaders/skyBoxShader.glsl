@@ -14,7 +14,7 @@ void main() {
     // TODO: Complete Vertex Shader
     gl_Position = u_matrixP * u_matrixV * u_matrixM * vec4 (a_position, 1);
 
-    v_normal = normalize(a_position.xyz)
+    v_normal = normalize(a_position.xyz); 
 }
 
 #endif
