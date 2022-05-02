@@ -44,7 +44,20 @@ class Renderer{
         gl.enableVertexAttribArray(posAttribLoc);
         gl.vertexAttribPointer(posAttribLoc,3,gl.FLOAT,false,0,0);
 
-        // TODO: Add other attributes
+        // normal buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, model.mesh.normalBuffer);
+        let normalAttribLoc = gl.getAttribLocation(this.program, "a_normal");
+        gl.enableVertexAttribArray(normalAttribLoc);
+        gl.vertexAttribPointer(normalAttribLoc,3,gl.FLOAT,false,0,0);
+
+        //TODO: Link up texcoord-buffer (model.mesh.texcoordBuffer) and
+        // a_texcoord attribute in vertex shader. See normal and position setup
+        // above for reference.
+        gl.bindBuffer(gl.ARRAY_BUFFER, model.mesh.texcoordBuffer);
+        let texAttribLoc = gl.getAttribLocation(this.program, "a_texcoord");
+        gl.enableVertexAttribArray(texAttribLoc);
+        gl.vertexAttribPointer(texAttribLoc,2,gl.FLOAT,false,0,0);
+
     }
 
     /**
@@ -69,6 +82,33 @@ class Renderer{
         let colorLoc = gl.getUniformLocation(this.program, "u_tint");
         gl.uniform3fv(colorLoc, model.material.tint.toFloat32());
 
-        // TODO: Add other uniforms
+        // set model inverse transpose to enable lighting calulations using normals
+        let invtransLoc = gl.getUniformLocation(this.program, "u_matrixInvTransM");
+        gl.uniformMatrix3fv(invtransLoc, false, M4.inverseTranspose3x3(model.modelMatrix).toFloat32());
+
+        // directional and ambient lighting lighting
+        let lightDirLoc = gl.getUniformLocation(this.program, "u_directionalLight");
+        gl.uniform3fv(lightDirLoc, shaderData.lightingData.directionalLight.toFloat32());
+
+        let lightColLoc = gl.getUniformLocation(this.program, "u_directionalColor");
+        gl.uniform3fv(lightColLoc, shaderData.lightingData.directionalColor.toFloat32());
+
+        let ambColLoc = gl.getUniformLocation(this.program, "u_ambientColor");
+        gl.uniform3fv(ambColLoc, shaderData.lightingData.ambientColor.toFloat32());
+
+        // texturing
+
+        //TODO: Link texture information to sampler2D uniform in the fragment shader.
+        // 1. Set active Texture Unit (gl.TEXTURE0)
+        // 2. Bind texture from TextureCache (TextureCache[model.material.mainTexture])
+        // 3. Get uniform location of u_mainTex texture sampler2D
+        // 4. Link to Texture Unit 0 (see 1., with bound texture from 2.) to uniform sampler2D
+        //      - this is equivalent to setting the uniform from location 3. to
+        //      an integer with value 0! -> gl.uniform1i(...)
+        gl.activeTexture(gl.TEXTURE0);
+        let mainTexture = TextureCache[model.material.mainTexture];
+        gl.bindTexture(gl.TEXTURE_2D, mainTexture);
+        let maintexLoc = gl.getUniformLocation(this.program, "u_mainTex");
+        gl.uniform1i(maintexLoc, 0);
     }
 }

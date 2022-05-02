@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>WebGL Music Animation</title>
+    <title>WebGL Texturing</title>
 </head>
 <body>
-	<canvas width="0" height="0" id="webgl-canvas"></canvas>
+	<canvas width="500" height="500" id="webgl-canvas"></canvas>
 
     <script src="../common/webgl-debug.js"></script>
     <script src="../common/math.js"></script>
@@ -14,9 +14,9 @@
     <script src="../common/renderloop.js"></script>
     <script src="../common/camera.js"></script>
     <script src="../common/grid.js"></script>
-    <script src="../common/objparser.js"></script>
     <script src="../common/dat.gui.min.js"></script>
     <script src="../common/stats.min.js"></script>
+    <script src="../common/objparser.js"></script>
 
     <script src="renderer.js"></script>
     <script src="modeltransform.js"></script>
@@ -28,6 +28,7 @@
         background-color: #111111; border: none; color: white; padding: 50px 50px; text-align: center;
         text-decoration: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
         font-size: 50px;">Click here to start your journey!</button>
+
 
     <script type="text/javascript">
         "use strict"; // use strict javascript compiling
@@ -45,27 +46,28 @@
         var canvas;
         var renderLoop;
 
-        var g_renderer;
-
         var g_camera;
         var g_cameraController;
 
-        var skeleton;
+        var sphere, cylinder, pyramid, cube, quad;
 
-        var g_grid
+        var g_grid;
+
+        var g_renderer;
 
         var timer = 0;
         var music;
 
-        // dat.gui to mute/unmute our sound
         var gui_data = {mute: false};
         var gui = new dat.GUI({ width: 100 } );
         gui.add(gui_data, "mute").onChange(function(value){music?.mute(value);});
 
         // lighting
         var g_lightingData = {
-            // TODO: Add lighting data
-        }
+            directionalLight: new V3(-0.2, -0.5, -0.5).normalize(), // light direction
+            directionalColor: new V3(1.0, 1.0, 1.0), // light color by default white
+            ambientColor: new V3(0.2, 0.2, 0.2), // dark gray
+        };
 
         function setup(){
             canvas = document.getElementById("webgl-canvas");
@@ -75,7 +77,6 @@
             gl.enable(gl.DEPTH_TEST);
             gl.depthFunc(gl.LEQUAL);
 
-            Input.initialize(canvas);
             // our shader files are loaded here. Once completed, init is called
             // for now there is only the standardShader, but you can add more by
             // simply adding another path into the array shaderPaths.
@@ -84,68 +85,75 @@
         }
 
         function init(){
+            Input.initialize(canvas);
+
+            music = new Howl({
+                src: ['resources/Space Exploration Song.mp3'],
+                html5: true, // use streaming audio if possible
+                loop: true
+            });
+            music.play();
+            music.mute(gui_data.mute);
+
             g_renderer = new Renderer("standardShader");
 
             g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
             g_cameraController = new OrbiterCameraController(canvas, g_camera);
-            g_cameraController.target.set(0,1.5,0);
+            g_cameraController.target.set(0,0,0);
 
-            // TODO: Load textures and add to materials
+            //TODO: load texture from resources folder to TextureCache
+            //TODO: add mainTexture property with loaded texture to material
+            GLUtils.loadTexture("uv-test", "resources/uv-test.png");
+            GLUtils.loadTexture("burning-steel", "resources/burning-steel.png");
+            GLUtils.loadTexture("gas-planet", "resources/Gas-Giant.png");
 
-            let material = {tint: new V3(1,1,1)};
+            // Material with white tint color
+            let uvTestMat = {tint: new V3(1,1,1), mainTexture: "uv-test"};
+            let starMat = {tint: new V3(1,1,1), mainTexture: "burning-steel"};
+            let gasGiantMat = {tint: new V3(1,1,1), mainTexture: "gas-planet"};
 
-            skeleton = new ModelTransform(OBJLoader.getMesh("skeleton", "resources/skeleton.obj"), material);
+            sphere = new ModelTransform(Primitives.Sphere.getMesh(), gasGiantMat);
+            cylinder = new ModelTransform(Primitives.Cylinder.getMesh(), starMat);
+            pyramid = new ModelTransform(Primitives.Pyramid.getMesh(), starMat);
+            cube = new ModelTransform(Primitives.Cube.getMesh(), scifiMat);
+            quad = new ModelTransform(Primitives.Quad.getMesh(), scifiFloorMat);
+
+            sphere.position.set(1.5,0,-1.5);
+            cylinder.position.set(-1.5,0,-1.5);
+            pyramid.position.set(1.5,0.5,1.5);
+            cube.position.set(1.5,0,1.5);
+            quad.position.set(0,-1,0);
+            quad.rotation.set(-90,0,0);
+            quad.scale.set(5,5,5);
 
             g_grid = new GridAxis();
-
-            // load an play the music using howler.js
-            // https://howlerjs.com/
-            // documentation: https://github.com/goldfire/howler.js#documentation
-            music = new Howl({
-                src: ['resources/Space Exploration Song.mp3'],
-                html5: true // use streaming audio if possible
-            });
-            music.play();
-            music.mute(gui_data.mute);
 
             renderLoop = new RenderLoop(draw).start();
         }
 
         function draw(deltaTime){
             Input.update();
-
-            let bpm = 77; // the skeleton song has 77 beats per minute
-            let bps = bpm/60.0; // this many beats per second
-            let beatDuration = 1.0/bps; // one beat lasts this long
-
-            timer += deltaTime; // count up timer variable
-            if(timer > beatDuration){ // do stuff every beat
-                timer = Time.time % beatDuration; // we can't simply set it to 0 here, because we will accumulate error.
-                                        // deltaTime is not 100% accurate (eg. with 60 fps 60*deltaTime != 1.00)
-                                        // but maybe 0.98 or 1.01.
-                                        // Since we work with sound and want a consistent event at exact intervals,
-                                        // we have to use the Time.time to decide when to act.
-                let r = Math.random();
-                let g = Math.random();
-                let b = Math.random();
-                gl.clearColor(r, g, b, 1); // set clear color (RGBA)
-            }
-
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             g_cameraController.update();
-
-            // scale y by 0.1 up and down bps times a second.
-            skeleton.scale.y = 1 + Math.sin((Time.time * Math.PI * 2) * bps) * 0.1;
-            skeleton.update();
+            timer += deltaTime;
+            sphere.rotation.set(0, timer*8, 0);
+            sphere.update();
+            cylinder.update();
+            pyramid.update();
+            cube.update();
+            quad.update();
 
             let shaderData = { lightingData: g_lightingData};
 
-            g_renderer.drawModel(skeleton, g_camera, shaderData);
+            g_renderer.drawModel(sphere, g_camera, shaderData);
+            g_renderer.drawModel(cylinder, g_camera, shaderData);
+            g_renderer.drawModel(pyramid, g_camera, shaderData);
+            g_renderer.drawModel(cube, g_camera, shaderData);
+            g_renderer.drawModel(quad, g_camera, shaderData);
 
             g_grid.draw(g_camera);
         }
 
-        // this will be executed when the startbutton is pressed, run the program and delete the button
         function load(){
             var button = document.getElementById("startbutton");
             button.remove();
