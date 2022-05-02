@@ -47,9 +47,9 @@ uniform vec3 u_ambientColor;    // intensity of ambient light
 varying vec3 v_normal;  // normal from the vertex shader
 varying vec3 v_surfaceToLight;
 
-//TODO: Add v_texcoord varying
+
 varying vec2 v_texcoord;
-//TODO: Add u_mainTex sampler (main texture)
+
 uniform sampler2D u_mainTex;
 
 void main(void){

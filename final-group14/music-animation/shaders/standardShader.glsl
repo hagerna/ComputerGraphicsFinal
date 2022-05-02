@@ -23,7 +23,6 @@ varying vec2 v_texcoord;
 void main() {
     v_normal = normalize(u_matrixInvTransM * a_normal); // set normal data for fragment shader
     
-    //TODO: Transfer texCoord attribute value to varying
     v_texcoord = a_texcoord;
 
     gl_Position = u_matrixP * u_matrixV * u_matrixM * vec4 (a_position, 1);
