@@ -254,9 +254,9 @@ For example in Atom install atom-live-server package and start with Packages -> 
         { target: gl.TEXTURE_CUBE_MAP_POSITIVE_X, src: imgSrcPositiveX }, // right 
         { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X, src: imgSrcNegativeX }, // left 
         { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y, src: imgSrcPositiveY }, // top 
-        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, src: imgSrcNegativeY }, // bottpm
+        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y, src: imgSrcNegativeY }, // bottom
         { target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z, src: imgSrcPositiveZ }, // front 
-        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, src: imgSrcNegativeZ }  // bacl 
+        { target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z, src: imgSrcNegativeZ }  // back 
         ];
         let facesLoaded = 0;
         
