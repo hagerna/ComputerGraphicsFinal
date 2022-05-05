@@ -86,10 +86,6 @@ class PointLightRenderer{
         let invtransLoc = gl.getUniformLocation(this.program, "u_matrixInvTransM");
         gl.uniformMatrix3fv(invtransLoc, false, M4.inverseTranspose3x3(model.modelMatrix).toFloat32());
 
-        // directional and ambient lighting lighting
-        let worldLoc = gl.getUniformLocation(this.program, "u_world");
-        gl.uniformMatrix4fv(worldLoc, false, viewMatrix.toFloat32());
-
         let pointLightLoc = gl.getUniformLocation(this.program, "u_lightWorldPosition");
         gl.uniform3fv(pointLightLoc, shaderData.lightingData.pointLight.toFloat32());
 
