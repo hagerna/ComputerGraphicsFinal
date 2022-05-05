@@ -53,7 +53,7 @@
 
         var sphere, cylinder, pyramid, cube, quad, skyBox;
 
-        var g_grid;
+        //var g_grid;
 
         var g_renderer, g_skyBox_renderer, g_pointLightRenderer;
 
@@ -69,7 +69,7 @@
             directionalLight: new V3(-0.2, -0.5, -0.5).normalize(), // light direction
             directionalColor: new V3(1.0, 1.0, 1.0), // light color by default white
             ambientColor: new V3(0.2, 0.2, 0.2), // dark gray
-            pointLight: new V3(3,0,0), // point light position?
+            pointLight: new V3(2,3,0), // point light position?
             pointLightColor: new V3(0.98, 0.46, 0), // point light color
         };
 
@@ -105,7 +105,7 @@
             GLUtils.loadCubeMap("skyBox","resources/bkg1_right.png","resources/bkg1_left.png", "resources/bkg1_top.png", "resources/bkg1_bot.png", "resources/bkg1_front.png", "resources/bkg1_back.png"); 
             skyBox = new SkyBox("skyBoxShader", "skyBox"); 
             g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
-            g_cameraController = new OrbiterCameraController(canvas, g_camera);
+            g_cameraController = new InputCameraController(canvas, g_camera);
             g_cameraController.target.set(0,0,0);
 
             //TODO: load texture from resources folder to TextureCache
@@ -134,7 +134,7 @@
             // skyBox.position.set(0,0,0); 
             // skyBox.scale.set(2,2,2); 
 
-            g_grid = new GridAxis();
+            //g_grid = new GridAxis();
             
            
             renderLoop = new RenderLoop(draw).start();
@@ -157,10 +157,11 @@
             g_renderer.drawModel(sphere, g_camera, shaderData);
             g_renderer.drawModel(skyBox, g_camera, shaderData);
             g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
-            g_renderer.drawModel(pyramid, g_camera, shaderData);
+            g_pointLightRenderer.drawModel(pyramid, g_camera, shaderData);
+            //skyBox_renderer.drawModel(skyBox); // put skybox on screem 
 
 
-            g_grid.draw(g_camera);
+            //g_grid.draw(g_camera);
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
             gl.enable(gl.CULL_FACE);

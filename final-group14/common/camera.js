@@ -183,10 +183,12 @@ class OrbiterCameraController {
         */
         update(){
             if (Input.keyDown("w")){
-                this.movementSpeed -= 0.01;
+                if (this.movementSpeed > -2){
+                    this.movementSpeed-= 0.01; 
+                }
             }
             if (Input.keyDown("s")){
-                if (this.movementSpeed < 0){
+                if (this.movementSpeed < 2){
                     this.movementSpeed+= 0.01; 
                 }
             }

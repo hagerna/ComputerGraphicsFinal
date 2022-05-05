@@ -29,8 +29,8 @@ void main() {
     //TODO: Transfer texCoord attribute value to varying
     v_texcoord = a_texcoord;
 
-    vec3 surfaceWorldPosition = (u_world * vec4 (a_position, 1)).xyz;
-    v_surfaceToLight = u_lightWorldPosition - surfaceWorldPosition;
+    //vec3 surfaceWorldPosition = (u_world * vec4 (a_position, 1)).xyz;
+    v_surfaceToLight = u_lightWorldPosition - a_position;
 
     gl_Position = u_matrixP * u_matrixV * u_matrixM * vec4 (a_position, 1);
 }
