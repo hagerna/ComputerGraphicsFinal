@@ -23,13 +23,10 @@ void main() {
 precision mediump float;
  
 uniform samplerCube u_skybox;
-uniform mat4 u_viewDirectionProjectionInverse;
 varying vec3 v_position;
 
 void main() {
-    vec3 t = u_viewDirectionProjectionInverse * vec4(v_position,1);
-    vec3 sampleColor = textureCube(u_skybox, normalize(t)).rgb;
-    gl_FragColor = textureCube(sampleColor, 1);
+    gl_FragColor = textureCube(u_skybox, v_position);
 }
 
 #endif
