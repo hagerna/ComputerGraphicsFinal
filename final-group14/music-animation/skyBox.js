@@ -110,7 +110,7 @@ class SkyBox{
         gl.depthMask(true); 
 
         // Draw the geometry.
-        gl.drawArrays(gl.TRIANGLES, 0, 1 * 6);
+        gl.drawArrays(gl.TRIANGLES, 0, 1 * 500);
 
   }
 
