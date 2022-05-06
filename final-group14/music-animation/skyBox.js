@@ -8,9 +8,10 @@ class SkyBox{
     * @param {string} shaderName the source code (text) of this shader programs shader.
     */
 
-	constructor(shaderName, cubeMap){
+	constructor(shaderName, cubeMap, camera){
 		this.program = GLUtils.createShaderProgram(shaderName);
         this.cubeMap = cubeMap; 
+        this.camera = camera; 
 	}
 
      // Draw the scene.
@@ -22,11 +23,46 @@ class SkyBox{
         gl.depthMask(false); 
 
         // Turn on the position attribute
+        let positionLocation =    [-0.5, 0.5, 0.5, //Front
+                        -0.5,-0.5, 0.5,
+                         0.5,-0.5, 0.5,
+                         0.5, 0.5, 0.5,
+
+                         0.5, 0.5,-0.5, //Back
+                         0.5,-0.5,-0.5,
+                        -0.5,-0.5,-0.5,
+                        -0.5, 0.5,-0.5,
+
+                        -0.5, 0.5,-0.5, //Top
+                        -0.5, 0.5, 0.5,
+                         0.5, 0.5, 0.5,
+                         0.5, 0.5,-0.5,
+
+                        -0.5,-0.5, 0.5, //Bottom
+                        -0.5,-0.5,-0.5,
+                         0.5,-0.5,-0.5,
+                         0.5,-0.5, 0.5,
+
+                         0.5, 0.5, 0.5, //Right
+                         0.5,-0.5, 0.5,
+                         0.5,-0.5,-0.5,
+                         0.5, 0.5,-0.5,
+
+                        -0.5, 0.5,-0.5, //Left
+                        -0.5,-0.5,-0.5,
+                        -0.5,-0.5, 0.5,
+                        -0.5, 0.5, 0.5];
+                
         gl.enableVertexAttribArray(positionLocation);
         
-
+  
+        // creating position buffer 
+        let positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positionLocation), gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         // Bind the position buffer.
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // TO DO MAKE POSIITON BUFFER
+         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer ); // TO DO MAKE POSIITON BUFFER
         let posAttribLoc = gl.getAttribLocation(this.program, "a_position");
         gl.enableVertexAttribArray(posAttribLoc);
         gl.vertexAttribPointer(posAttribLoc,3,gl.FLOAT,false,0,0);
@@ -40,17 +76,17 @@ class SkyBox{
         gl.vertexAttribPointer(
             positionLocation, size, type, normalize, stride, offset);
 
-        
-        var copy = M4.copy(viewMatrix);  
+        // getting a copy with the use of Camera 
+        var copy = this.camera.viewMatrix;  
         copy[12] = 0;
         copy[13] = 0;
         copy[14] = 0;
         
 
         var viewDirectionProjectionMatrix =
-            M4.multiply(projectionMatrix, viewMatrix);
+            M4.multM4(this.camera.projectionMatrix, this.camera.viewMatrix);
         var viewDirectionProjectionInverseMatrix =
-            M4.inverse(viewDirectionProjectionMatrix);
+            M4.invert(viewDirectionProjectionMatrix);
 
         // Set the uniforms
         let inverseLocation = gl.getUniformLocation(this.program, "u_viewDirectionProjectionInverse"); 
@@ -58,10 +94,10 @@ class SkyBox{
         inverseLocation, false,
         viewDirectionProjectionInverseMatrix.toFloat32());
 
-        let viewMatrixLoc = gl.getUniformLocation(this.program, "u_matrixV");
+       let viewMatrixLoc = gl.getUniformLocation(this.program, "u_matrixV");
         gl.uniformMatrix4fv(viewMatrixLoc, false, copy.toFloat32());
         let projMatrixLoc = gl.getUniformLocation(this.program, "u_matrixP");
-        gl.uniformMatrix4fv(projMatrixLoc, false, projectionMatrix.toFloat32());
+        gl.uniformMatrix4fv(projMatrixLoc, false, this.camera.projectionMatrix.toFloat32());
 
         // Tell the shader to use texture unit 0 for u_skybox
         // gl.uniform1i(skyboxLocation, 0);
