@@ -81,7 +81,7 @@ class SkyBox{
         copy[12] = 0;
         copy[13] = 0;
         copy[14] = 0;
-        
+       copy = M4.invert(copy);
 
         var viewDirectionProjectionMatrix =
             M4.multM4(this.camera.projectionMatrix, this.camera.viewMatrix);

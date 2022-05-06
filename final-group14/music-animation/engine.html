@@ -20,6 +20,7 @@
 
     <script src="renderer.js"></script>
     <script src="pointLightRenderer.js"></script>
+    <script src="unlitRenderer.js"></script>
     <script src="skyBox.js"></script>
     <script src="modeltransform.js"></script>
     <script src="primitives.js"></script>
@@ -51,11 +52,11 @@
         var g_camera;
         var g_cameraController;
 
-        var sphere, cylinder, pyramid, cube, quad, skyBox;
+        var sphere, cylinder, pyramid, cube, quad, skyBox, star;
 
         //var g_grid;
 
-        var g_renderer, g_skyBox_renderer, g_pointLightRenderer;
+        var g_renderer, g_skyBox_renderer, g_pointLightRenderer, g_unlitRenderer;
 
         var timer = 0;
         var music;
@@ -84,7 +85,7 @@
             // our shader files are loaded here. Once completed, init is called
             // for now there is only the standardShader, but you can add more by
             // simply adding another path into the array shaderPaths.
-            let shaderPaths = ["shaders/standardShader.glsl", "shaders/skyBoxShader.glsl", "shaders/pointLightShader.glsl"]; 
+            let shaderPaths = ["shaders/standardShader.glsl", "shaders/skyBoxShader.glsl", "shaders/pointLightShader.glsl", "shaders/unlitShader.glsl"]; 
             GLUtils.loadShaders(shaderPaths, init);
         }
 
@@ -101,8 +102,9 @@
 
             g_renderer = new Renderer("standardShader");
             g_pointLightRenderer = new PointLightRenderer("pointLightShader");
+            g_unlitRenderer = new UnlitRenderer("unlitShader");
 
-           // GLUtils.loadCubeMap("skyBox","resources/bkg1_right.png","resources/bkg1_left.png", "resources/bkg1_top.png", "resources/bkg1_bot.png", "resources/bkg1_front.png", "resources/bkg1_back.png"); 
+           GLUtils.loadCubeMap("skyBox","resources/bkg1_right.png","resources/bkg1_left.png", "resources/bkg1_top.png", "resources/bkg1_bot.png", "resources/bkg1_front.png", "resources/bkg1_back.png"); 
        
             g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
             g_cameraController = new InputCameraController(canvas, g_camera);
@@ -125,10 +127,13 @@
             sphere = new ModelTransform(Primitives.Sphere.getMesh(), gasGiantMat);
             cylinder = new ModelTransform(Primitives.Cylinder.getMesh(), starMat);
             pyramid = new ModelTransform(Primitives.Pyramid.getMesh(), starMat);
+            star = new ModelTransform(Primitives.Sphere.getMesh(), starMat);
 
             sphere.position.set(1.5,0,-1.5);
             cylinder.position.set(-1.5,0,-1.5);
             pyramid.position.set(1.5,0.5,1.5);
+            star.position.set(0,0,-10);
+            star.scale.set(3,3,3);
 
             renderLoop = new RenderLoop(draw).start();
         }
@@ -139,9 +144,12 @@
             g_cameraController.update();
             timer += deltaTime;
             sphere.rotation.set(0, timer*8, 0);
+            star.rotation.set(0,timer*2,0);
             sphere.update();
             cylinder.update();
             pyramid.update();
+            star.update();
+            //skyBox.drawGeometry();
         
 
             let shaderData = { lightingData: g_lightingData};
@@ -149,7 +157,7 @@
             g_renderer.drawModel(sphere, g_camera, shaderData);
             g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
             g_pointLightRenderer.drawModel(pyramid, g_camera, shaderData);
-            skyBox.drawGeometry();
+            g_unlitRenderer.drawModel(star, g_camera, shaderData);
         
 
             //g_grid.draw(g_camera);
