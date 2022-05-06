@@ -103,10 +103,12 @@
             g_pointLightRenderer = new PointLightRenderer("pointLightShader");
 
             GLUtils.loadCubeMap("skyBox","resources/bkg1_right.png","resources/bkg1_left.png", "resources/bkg1_top.png", "resources/bkg1_bot.png", "resources/bkg1_front.png", "resources/bkg1_back.png"); 
-            skyBox = new SkyBox("skyBoxShader", "skyBox"); 
+       
             g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
             g_cameraController = new InputCameraController(canvas, g_camera);
             g_cameraController.target.set(0,0,0);
+
+            //skyBox = new SkyBox("skyBoxShader", "skyBox", g_camera); 
 
             //TODO: load texture from resources folder to TextureCache
             //TODO: add mainTexture property with loaded texture to material
@@ -149,7 +151,7 @@
             sphere.update();
             cylinder.update();
             pyramid.update();
-            skyBox.drawGeometry(); 
+            //skyBox.drawGeometry(); 
             // skyBox.update(); 
 
             let shaderData = { lightingData: g_lightingData};
