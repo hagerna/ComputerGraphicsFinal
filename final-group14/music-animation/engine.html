@@ -102,13 +102,13 @@
             g_renderer = new Renderer("standardShader");
             g_pointLightRenderer = new PointLightRenderer("pointLightShader");
 
-            GLUtils.loadCubeMap("skyBox","resources/bkg1_right.png","resources/bkg1_left.png", "resources/bkg1_top.png", "resources/bkg1_bot.png", "resources/bkg1_front.png", "resources/bkg1_back.png"); 
+           // GLUtils.loadCubeMap("skyBox","resources/bkg1_right.png","resources/bkg1_left.png", "resources/bkg1_top.png", "resources/bkg1_bot.png", "resources/bkg1_front.png", "resources/bkg1_back.png"); 
        
             g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
             g_cameraController = new InputCameraController(canvas, g_camera);
             g_cameraController.target.set(0,0,0);
 
-            //skyBox = new SkyBox("skyBoxShader", "skyBox", g_camera); 
+            skyBox = new SkyBox("skyBoxShader", "skyBox", g_camera); 
 
             //TODO: load texture from resources folder to TextureCache
             //TODO: add mainTexture property with loaded texture to material
@@ -117,28 +117,19 @@
             GLUtils.loadTexture("gas-planet", "resources/Gas-Giant.png");
             // load space box texture
 
-
-
             // Material with white tint color
             let uvTestMat = {tint: new V3(1,1,1), mainTexture: "uv-test"};
             let starMat = {tint: new V3(1,1,1), mainTexture: "burning-steel"};
             let gasGiantMat = {tint: new V3(1,1,1), mainTexture: "gas-planet"};
-            // let spaceBoxMat = {tint: new V3(1,1,1), mainTexture: "uv-test"};
 
             sphere = new ModelTransform(Primitives.Sphere.getMesh(), gasGiantMat);
             cylinder = new ModelTransform(Primitives.Cylinder.getMesh(), starMat);
             pyramid = new ModelTransform(Primitives.Pyramid.getMesh(), starMat);
-            // skyBox = new ModelTransform(Primitives.Cube.getMesh(), spaceBoxMat); 
 
             sphere.position.set(1.5,0,-1.5);
             cylinder.position.set(-1.5,0,-1.5);
             pyramid.position.set(1.5,0.5,1.5);
-            // skyBox.position.set(0,0,0); 
-            // skyBox.scale.set(2,2,2); 
 
-            //g_grid = new GridAxis();
-            
-           
             renderLoop = new RenderLoop(draw).start();
         }
 
@@ -151,17 +142,15 @@
             sphere.update();
             cylinder.update();
             pyramid.update();
-            //skyBox.drawGeometry(); 
-            // skyBox.update(); 
+        
 
             let shaderData = { lightingData: g_lightingData};
 
             g_renderer.drawModel(sphere, g_camera, shaderData);
-            g_renderer.drawModel(skyBox, g_camera, shaderData);
             g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
             g_pointLightRenderer.drawModel(pyramid, g_camera, shaderData);
-            //skyBox_renderer.drawModel(skyBox); // put skybox on screem 
-
+            skyBox.drawGeometry();
+        
 
             //g_grid.draw(g_camera);
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);

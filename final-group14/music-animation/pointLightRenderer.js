@@ -28,7 +28,7 @@ class PointLightRenderer{
 
         // draw call using index based triangle assembly (elements)
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.mesh.bufIndex);
-        gl.drawElements(model.mesh.drawMode, model.mesh.indexCount, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(model.mesh.drawModel, model.mesh.indexCount, gl.UNSIGNED_SHORT, 0);
 
         return this;
 	}
