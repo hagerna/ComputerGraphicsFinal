@@ -54,8 +54,6 @@
 
         var sphere, cylinder, pyramid, cube, quad, skyBox, star;
 
-        //var g_grid;
-
         var g_renderer, g_skyBox_renderer, g_pointLightRenderer, g_unlitRenderer;
 
         var timer = 0;
@@ -122,12 +120,13 @@
             // Material with white tint color
             let uvTestMat = {tint: new V3(1,1,1), mainTexture: "uv-test"};
             let starMat = {tint: new V3(1,1,1), mainTexture: "burning-steel"};
+            let starMatCyan = {tint: new V3(1,1,0), mainTexture: "burning-steel"};
             let gasGiantMat = {tint: new V3(1,1,1), mainTexture: "gas-planet"};
 
             sphere = new ModelTransform(Primitives.Sphere.getMesh(), gasGiantMat);
             cylinder = new ModelTransform(Primitives.Cylinder.getMesh(), starMat);
             pyramid = new ModelTransform(Primitives.Pyramid.getMesh(), starMat);
-            star = new ModelTransform(Primitives.Sphere.getMesh(), starMat);
+            star = new ModelTransform(Primitives.Sphere.getMesh(), starMatCyan);
 
             sphere.position.set(1.5,0,-1.5);
             cylinder.position.set(-1.5,0,-1.5);
@@ -148,12 +147,11 @@
             sphere.update();
             cylinder.update();
             pyramid.update();
-            star.update();
-            //skyBox.drawGeometry();
-        
+            star.update();      
 
             let shaderData = { lightingData: g_lightingData};
 
+            skyBox.drawGeometry();
             g_renderer.drawModel(sphere, g_camera, shaderData);
             g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
             g_pointLightRenderer.drawModel(pyramid, g_camera, shaderData);

@@ -23,7 +23,8 @@ class SkyBox{
         gl.depthMask(false); 
 
         // Turn on the position attribute
-        let positionLocation =    [-1, 1, 1, //Front
+        let positionLocation =    
+                      [-1, 1, 1, //Front
                         -1,-1, 1,
                          1,-1, 1,
                          1, 1, 1,
@@ -62,7 +63,7 @@ class SkyBox{
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positionLocation), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         // Bind the position buffer.
-         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer ); // TO DO MAKE POSIITON BUFFER
+         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // TO DO MAKE POSIITON BUFFER
         let posAttribLoc = gl.getAttribLocation(this.program, "a_position");
         gl.enableVertexAttribArray(posAttribLoc);
         gl.vertexAttribPointer(posAttribLoc,3,gl.FLOAT,false,0,0);
@@ -73,8 +74,7 @@ class SkyBox{
         var normalize = false; // don't normalize the data
         var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
         var offset = 0;        // start at the beginning of the buffer
-        gl.vertexAttribPointer(
-            positionLocation, size, type, normalize, stride, offset);
+        gl.vertexAttribPointer(positionLocation, size, type, normalize, stride, offset);
 
         let viewMatrix = this.camera.viewMatrix;
         let projectionMatrix = this.camera.projectionMatrix;
@@ -85,19 +85,7 @@ class SkyBox{
         copy[14] = 0;
         copy = M4.invert(copy);
 
-        // complete multiplicaiton and inverse math 
-        var viewDirectionProjectionMatrix =
-            M4.multM4(projectionMatrix, viewMatrix);
-        var viewDirectionProjectionInverseMatrix =
-            M4.invert(viewDirectionProjectionMatrix);
-
         // Set the uniforms
-        
-        let inverseLocation = gl.getUniformLocation(this.program, "u_viewDirectionProjectionInverse");
-        gl.uniformMatrix4fv(
-        inverseLocation, false,
-        viewDirectionProjectionInverseMatrix.toFloat32());
-
        let viewMatrixLoc = gl.getUniformLocation(this.program, "u_matrixV");
         gl.uniformMatrix4fv(viewMatrixLoc, false, copy.toFloat32());
         let projMatrixLoc = gl.getUniformLocation(this.program, "u_matrixP");
@@ -113,7 +101,7 @@ class SkyBox{
         gl.depthMask(true); 
 
         // Draw the geometry.
-        gl.drawArrays(gl.TRIANGLES, 0, 1 * 500);
+        gl.drawArrays(gl.TRIANGLES, 0, 1 * 24, gl.UNSIGNED_SHORT, 0);
 
   }
 
