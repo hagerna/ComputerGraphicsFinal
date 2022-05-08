@@ -76,20 +76,24 @@ class SkyBox{
         gl.vertexAttribPointer(
             positionLocation, size, type, normalize, stride, offset);
 
+        let viewMatrix = this.camera.viewMatrix;
+        let projectionMatrix = this.camera.projectionMatrix;
         // getting a copy with the use of Camera 
-        var copy = this.camera.viewMatrix;  
+        let copy = viewMatrix;  
         copy[12] = 0;
         copy[13] = 0;
         copy[14] = 0;
-       copy = M4.invert(copy);
+        copy = M4.invert(copy);
 
+        // complete multiplicaiton and inverse math 
         var viewDirectionProjectionMatrix =
-            M4.multM4(this.camera.projectionMatrix, this.camera.viewMatrix);
+            M4.multM4(projectionMatrix, viewMatrix);
         var viewDirectionProjectionInverseMatrix =
             M4.invert(viewDirectionProjectionMatrix);
 
         // Set the uniforms
-        let inverseLocation = gl.getUniformLocation(this.program, "u_viewDirectionProjectionInverse"); 
+        
+        let inverseLocation = gl.getUniformLocation(this.program, "u_viewDirectionProjectionInverse");
         gl.uniformMatrix4fv(
         inverseLocation, false,
         viewDirectionProjectionInverseMatrix.toFloat32());
@@ -97,11 +101,10 @@ class SkyBox{
        let viewMatrixLoc = gl.getUniformLocation(this.program, "u_matrixV");
         gl.uniformMatrix4fv(viewMatrixLoc, false, copy.toFloat32());
         let projMatrixLoc = gl.getUniformLocation(this.program, "u_matrixP");
-        gl.uniformMatrix4fv(projMatrixLoc, false, this.camera.projectionMatrix.toFloat32());
+        gl.uniformMatrix4fv(projMatrixLoc, false, projectionMatrix.toFloat32());
 
-        // Tell the shader to use texture unit 0 for u_skybox
-        // gl.uniform1i(skyboxLocation, 0);
 
+        // set and load cube map as active texture
         gl.activeTexture(gl.TEXTURE0);
         let mainTexture = TextureCache["skyBox"];
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, mainTexture);

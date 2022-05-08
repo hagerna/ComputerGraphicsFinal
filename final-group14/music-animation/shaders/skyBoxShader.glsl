@@ -8,6 +8,7 @@ attribute vec3 a_position;
 varying vec3 v_position;
 uniform mat4 u_matrixP; 
 uniform mat4 u_matrixV; 
+uniform mat4 u_viewDirectionProjectionInverse; 
 
 void main() {
   v_position = a_position;
