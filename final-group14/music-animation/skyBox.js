@@ -61,20 +61,9 @@ class SkyBox{
         let positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positionLocation), gl.STATIC_DRAW);
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        // Bind the position buffer.
-         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // TO DO MAKE POSIITON BUFFER
         let posAttribLoc = gl.getAttribLocation(this.program, "a_position");
         gl.enableVertexAttribArray(posAttribLoc);
         gl.vertexAttribPointer(posAttribLoc,3,gl.FLOAT,false,0,0);
-
-        // Tell the position attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-        var size = 2;          // 2 components per iteration
-        var type = gl.FLOAT;   // the data is 32bit floats
-        var normalize = false; // don't normalize the data
-        var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-        var offset = 0;        // start at the beginning of the buffer
-        gl.vertexAttribPointer(positionLocation, size, type, normalize, stride, offset);
 
         let viewMatrix = this.camera.viewMatrix;
         let projectionMatrix = this.camera.projectionMatrix;
@@ -101,6 +90,7 @@ class SkyBox{
         gl.depthMask(true); 
 
         // Draw the geometry.
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.drawArrays(gl.TRIANGLES, 0, 1 * 24, gl.UNSIGNED_SHORT, 0);
 
   }
