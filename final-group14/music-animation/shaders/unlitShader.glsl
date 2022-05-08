@@ -10,7 +10,6 @@ attribute vec2 a_texcoord; // the texture coordinate of each vertex
 uniform mat4 u_matrixM; // the model matrix of this object
 uniform mat4 u_matrixV; // the view matrix of the camera
 uniform mat4 u_matrixP; // the projection matrix of the camera
-uniform mat3 u_matrixInvTransM;
 
 varying vec2 v_texcoord;
 

@@ -96,14 +96,6 @@ class PointLightRenderer{
         gl.uniform3fv(ambColLoc, shaderData.lightingData.ambientColor.toFloat32());
 
         // texturing
-
-        //TODO: Link texture information to sampler2D uniform in the fragment shader.
-        // 1. Set active Texture Unit (gl.TEXTURE0)
-        // 2. Bind texture from TextureCache (TextureCache[model.material.mainTexture])
-        // 3. Get uniform location of u_mainTex texture sampler2D
-        // 4. Link to Texture Unit 0 (see 1., with bound texture from 2.) to uniform sampler2D
-        //      - this is equivalent to setting the uniform from location 3. to
-        //      an integer with value 0! -> gl.uniform1i(...)
         gl.activeTexture(gl.TEXTURE0);
         let mainTexture = TextureCache[model.material.mainTexture];
         gl.bindTexture(gl.TEXTURE_2D, mainTexture);

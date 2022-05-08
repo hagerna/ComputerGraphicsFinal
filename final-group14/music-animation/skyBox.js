@@ -69,7 +69,7 @@ class SkyBox{
         let viewMatrix = this.camera.viewMatrix;
         let projectionMatrix = this.camera.projectionMatrix;
         // getting a copy with the use of Camera 
-        let copy = viewMatrix;  
+        let copy = viewMatrix.clone();  
         copy[12] = 0;
         copy[13] = 0;
         copy[14] = 0;
@@ -87,30 +87,10 @@ class SkyBox{
         let mainTexture = TextureCache["skyBox"];
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, mainTexture);
 
-
-        //gl.depthMask(true); 
-
         // Draw the geometry.
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.drawArrays(gl.TRIANGLES, 0, 24, gl.UNSIGNED_SHORT, 0);
 
         gl.depthMask(true);
   }
-
-
-  
-    setGeometry(gl) {
-    var positions = new Float32Array(
-      [
-        -1, -1, 
-         1, -1, 
-        -1,  1, 
-        -1,  1,
-         1, -1,
-         1,  1,
-      ]);
-    gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
-  }
-
-
 } 

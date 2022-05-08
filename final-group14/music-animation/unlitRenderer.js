@@ -76,19 +76,7 @@ class UnlitRenderer{
         let colorLoc = gl.getUniformLocation(this.program, "u_tint");
         gl.uniform3fv(colorLoc, model.material.tint.toFloat32());
 
-        // set model inverse transpose to enable lighting calulations using normals
-        let invtransLoc = gl.getUniformLocation(this.program, "u_matrixInvTransM");
-        gl.uniformMatrix3fv(invtransLoc, false, M4.inverseTranspose3x3(model.modelMatrix).toFloat32());
-
         // texturing
-
-        //TODO: Link texture information to sampler2D uniform in the fragment shader.
-        // 1. Set active Texture Unit (gl.TEXTURE0)
-        // 2. Bind texture from TextureCache (TextureCache[model.material.mainTexture])
-        // 3. Get uniform location of u_mainTex texture sampler2D
-        // 4. Link to Texture Unit 0 (see 1., with bound texture from 2.) to uniform sampler2D
-        //      - this is equivalent to setting the uniform from location 3. to
-        //      an integer with value 0! -> gl.uniform1i(...)
         gl.activeTexture(gl.TEXTURE0);
         let mainTexture = TextureCache[model.material.mainTexture];
         gl.bindTexture(gl.TEXTURE_2D, mainTexture);
