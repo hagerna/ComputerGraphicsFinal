@@ -134,7 +134,7 @@ class OrbiterCameraController {
         this.camera.cameraMatrix = M4.translationMatrix(this.target.x ,this.offsetY + this.target.y, this.target.z);
         this.camera.cameraMatrix = M4.multM4(this.camera.cameraMatrix, M4.rotationMatrixY(this.yaw));
         this.camera.cameraMatrix = M4.multM4(this.camera.cameraMatrix, M4.rotationMatrixX(this.pitch));
-        this.camera.cameraMatrix = M4.multM4(this.camera.cameraMatrix, M4.translationMatrix(0,0,this.distance));
+        //this.camera.cameraMatrix = M4.multM4(this.camera.cameraMatrix, M4.translationMatrix(0,0,this.distance));
 
         this.camera.viewMatrix = M4.invert(this.camera.cameraMatrix);
     }

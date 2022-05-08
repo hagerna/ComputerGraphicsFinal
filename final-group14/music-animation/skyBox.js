@@ -87,12 +87,13 @@ class SkyBox{
         gl.bindTexture(gl.TEXTURE_CUBE_MAP, mainTexture);
 
 
-        gl.depthMask(true); 
+        //gl.depthMask(true); 
 
         // Draw the geometry.
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.drawArrays(gl.TRIANGLES, 0, 1 * 24, gl.UNSIGNED_SHORT, 0);
+        gl.drawArrays(gl.TRIANGLES, 0, 24, gl.UNSIGNED_SHORT, 0);
 
+        gl.depthMask(true);
   }
 
 
