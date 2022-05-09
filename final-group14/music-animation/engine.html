@@ -126,8 +126,7 @@
             let AsteroidMat = {tint: new V3(1,1,0), mainTexture: "asteroid"};
 
             let Asteroid1Mesh = OBJLoader.getMesh("Asteroid1Mesh", "resources/Asteroid1.obj");
-            let Asteroid2Mesh = OBJLoader.getMesh("Asteroid2Mesh", "resources/Asteroid2.obj");
-            asteroid = new ModelTransform(Asteroid2Mesh, AsteroidMat);
+            asteroid = new ModelTransform(Asteroid1Mesh, AsteroidMat);
 
             sphere = new ModelTransform(Primitives.Sphere.getMesh(), gasGiantMat);
             cylinder = new ModelTransform(Primitives.Cylinder.getMesh(), starMat);
