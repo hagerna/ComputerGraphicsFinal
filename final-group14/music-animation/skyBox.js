@@ -78,13 +78,14 @@ class SkyBox{
         gl.vertexAttribPointer(posAttribLoc,3,gl.FLOAT,false,0,0);
 
         let viewMatrix = camera.viewMatrix;
-        let projectionMatrix = M4.multM4(camera.projectionMatrix, viewMatrix); 
+        let projectionMatrix = camera.projectionMatrix; 
         // getting a copy with the use of Camera 
         let copy = viewMatrix.clone(); 
-        //copy[8] = 0;
-        //copy[9] = 0;
-        //copy[10] = 0;
-        copy = M4.invert(copy);
+
+        copy[12] = 0;
+        copy[13] = 0;
+        copy[14] = 0;
+       
 
         // Set the uniforms
         let viewMatrixLoc = gl.getUniformLocation(this.program, "u_matrixV");
