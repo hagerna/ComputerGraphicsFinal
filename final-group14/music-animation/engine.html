@@ -151,14 +151,12 @@
 
             let shaderData = { lightingData: g_lightingData};
 
-            skyBox.drawGeometry();
+            skyBox.drawGeometry(g_camera);
             g_renderer.drawModel(sphere, g_camera, shaderData);
             g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
             g_pointLightRenderer.drawModel(pyramid, g_camera, shaderData);
             g_unlitRenderer.drawModel(star, g_camera, shaderData);
         
-
-            //g_grid.draw(g_camera);
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
             gl.enable(gl.CULL_FACE);

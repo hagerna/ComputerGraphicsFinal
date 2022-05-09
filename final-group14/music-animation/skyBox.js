@@ -8,14 +8,13 @@ class SkyBox{
     * @param {string} shaderName the source code (text) of this shader programs shader.
     */
 
-	constructor(shaderName, cubeMap, camera){
+	constructor(shaderName, cubeMap){
 		this.program = GLUtils.createShaderProgram(shaderName);
         this.cubeMap = cubeMap; 
-        this.camera = camera; 
 	}
 
      // Draw the scene.
-    drawGeometry() {
+    drawGeometry(camera) {
 
         // Tell it to use our program (pair of shaders)
         gl.useProgram(this.program);
@@ -78,13 +77,13 @@ class SkyBox{
         gl.enableVertexAttribArray(posAttribLoc);
         gl.vertexAttribPointer(posAttribLoc,3,gl.FLOAT,false,0,0);
 
-        let viewMatrix = this.camera.viewMatrix;
-        let projectionMatrix = M4.multM4(this.camera.projectionMatrix, viewMatrix); 
+        let viewMatrix = camera.viewMatrix;
+        let projectionMatrix = M4.multM4(camera.projectionMatrix, viewMatrix); 
         // getting a copy with the use of Camera 
-        let copy = viewMatrix;  
-        copy[12] = 0;
-        copy[13] = 0;
-        copy[14] = 0;
+        let copy = viewMatrix.clone(); 
+        //copy[8] = 0;
+        //copy[9] = 0;
+        //copy[10] = 0;
         copy = M4.invert(copy);
 
         // Set the uniforms
