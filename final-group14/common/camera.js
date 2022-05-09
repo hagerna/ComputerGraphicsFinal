@@ -183,34 +183,27 @@ class OrbiterCameraController {
         */
         update(){
             if (Input.keyDown("w")){
-                if (this.movementSpeed > -2){
-                    this.movementSpeed-= 0.01; 
-                }
+                this.movementSpeed=-0.05; 
             }
             if (Input.keyDown("s")){
-                if (this.movementSpeed < 0){
-                    this.movementSpeed+= 0.01; 
-                }
+                this.movementSpeed= 0.05; 
             }
             if (Input.keyDown("q")){
-                if (this.PitchRotationSpeed < 1){
-                    this.PitchRotationSpeed += 0.05; 
-                }
+                this.PitchRotationSpeed = 0.2; 
             }
             if (Input.keyDown("e")){
-                if (this.PitchRotationSpeed > -1){
-                    this.PitchRotationSpeed -= 0.05; 
-                }
+                this.PitchRotationSpeed = -0.2; 
             }
             if (Input.keyDown("a")){
-                if (this.YawRotationSpeed < 1){
-                    this.YawRotationSpeed += 0.1; 
-                }
+                this.YawRotationSpeed = 0.35; 
             }
             if (Input.keyDown("d")){
-                if (this.YawRotationSpeed > -1){
-                    this.YawRotationSpeed -= 0.1; 
-                }
+                this.YawRotationSpeed = -0.35; 
+            }
+            if (Input.keyDown("r")){
+                this.movementSpeed = 0;
+                this.PitchRotationSpeed = 0;
+                this.YawRotationSpeed = 0;
             }
             this.pitch += this.PitchRotationSpeed;
             this.yaw += this.YawRotationSpeed;

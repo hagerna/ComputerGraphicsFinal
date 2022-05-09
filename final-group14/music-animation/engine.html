@@ -52,7 +52,7 @@
         var g_camera;
         var g_cameraController;
 
-        var sphere, cylinder, pyramid, cube, quad, skyBox, star;
+        var sphere, cylinder, pyramid, cube, quad, skyBox, star, asteroid;
 
         var g_renderer, g_skyBox_renderer, g_pointLightRenderer, g_unlitRenderer;
 
@@ -115,6 +115,7 @@
             GLUtils.loadTexture("uv-test", "resources/uv-test.png");
             GLUtils.loadTexture("burning-steel", "resources/burning-steel.png");
             GLUtils.loadTexture("gas-planet", "resources/Gas-Giant.png");
+            GLUtils.loadTexture("asteroid", "resources/asteroid.png");
             // load space box texture
 
             // Material with white tint color
@@ -122,6 +123,11 @@
             let starMat = {tint: new V3(1,1,1), mainTexture: "burning-steel"};
             let starMatCyan = {tint: new V3(1,1,0), mainTexture: "burning-steel"};
             let gasGiantMat = {tint: new V3(1,1,1), mainTexture: "gas-planet"};
+            let AsteroidMat = {tint: new V3(1,1,0), mainTexture: "asteroid"};
+
+            let Asteroid1Mesh = OBJLoader.getMesh("Asteroid1Mesh", "resources/Asteroid1.obj");
+            let Asteroid2Mesh = OBJLoader.getMesh("Asteroid2Mesh", "resources/Asteroid2.obj");
+            asteroid = new ModelTransform(Asteroid2Mesh, AsteroidMat);
 
             sphere = new ModelTransform(Primitives.Sphere.getMesh(), gasGiantMat);
             cylinder = new ModelTransform(Primitives.Cylinder.getMesh(), starMat);
@@ -142,8 +148,10 @@
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             g_cameraController.update();
             timer += deltaTime;
-            sphere.rotation.set(0, timer*8, 0);
-            star.rotation.set(0,timer*2,0);
+            sphere.ConstantRotate(8,timer);
+            sphere.Orbit(star.position, 10, 1, timer);
+            star.ConstantRotate(2,timer);
+            asteroid.Orbit(star.position, 12, 2, timer);
             sphere.update();
             cylinder.update();
             pyramid.update();
@@ -153,6 +161,7 @@
 
             skyBox.drawGeometry(g_camera);
             g_renderer.drawModel(sphere, g_camera, shaderData);
+            g_renderer.drawModel(asteroid, g_camera, shaderData);
             g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
             g_pointLightRenderer.drawModel(pyramid, g_camera, shaderData);
             g_unlitRenderer.drawModel(star, g_camera, shaderData);

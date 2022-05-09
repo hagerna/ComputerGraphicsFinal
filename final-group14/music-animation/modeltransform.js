@@ -151,4 +151,12 @@ class ModelTransform{
             gl.uniform1i(shader.uniformLoc.mainTexture, 0); //Our predefined uniformLoc.mainTexture is uMainTex
         }
     }
+
+    Orbit(target, distance, speed, timer){
+        this.position.set(distance*Math.cos(timer*speed) + target.x, target.y, distance*Math.sin(timer*speed) + target.z)
+    }
+
+    ConstantRotate(speed, dt, pitch = 0, roll = 1, yaw = 0){
+       this.rotation.set(-pitch*speed*dt, -roll*speed*dt, -yaw*speed*dt);
+    }
 }
