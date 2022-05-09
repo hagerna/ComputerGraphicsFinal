@@ -24,35 +24,78 @@ class SkyBox{
 
 
 
-        let positionLocation =    [-0.5, 0.5, 0.5, //Front
-          -0.5,-0.5, 0.5,
-           0.5,-0.5, 0.5,
-           0.5, 0.5, 0.5,
+        // let positionLocation =   
+        //  [-0.5, 0.5, 0.5, //Front
+        //   -0.5,-0.5, 0.5,
+        //    0.5,-0.5, 0.5,
+        //    0.5, 0.5, 0.5,
 
-           0.5, 0.5,-0.5, //Back
-           0.5,-0.5,-0.5,
-          -0.5,-0.5,-0.5,
-          -0.5, 0.5,-0.5,
+        //    0.5, 0.5,-0.5, //Back
+        //    0.5,-0.5,-0.5,
+        //   -0.5,-0.5,-0.5,
+        //   -0.5, 0.5,-0.5,
 
-          -0.5, 0.5,-0.5, //Top
-          -0.5, 0.5, 0.5,
-           0.5, 0.5, 0.5,
-           0.5, 0.5,-0.5,
+        //   -0.5, 0.5,-0.5, //Top
+        //   -0.5, 0.5, 0.5,
+        //    0.5, 0.5, 0.5,
+        //    0.5, 0.5,-0.5,
 
-          -0.5,-0.5, 0.5, //Bottom
-          -0.5,-0.5,-0.5,
-           0.5,-0.5,-0.5,
-           0.5,-0.5, 0.5,
+        //   -0.5,-0.5, 0.5, //Bottom
+        //   -0.5,-0.5,-0.5,
+        //    0.5,-0.5,-0.5,
+        //    0.5,-0.5, 0.5,
 
-           0.5, 0.5, 0.5, //Right
-           0.5,-0.5, 0.5,
-           0.5,-0.5,-0.5,
-           0.5, 0.5,-0.5,
+        //    0.5, 0.5, 0.5, //Right
+        //    0.5,-0.5, 0.5,
+        //    0.5,-0.5,-0.5,
+        //    0.5, 0.5,-0.5,
 
-          -0.5, 0.5,-0.5, //Left
-          -0.5,-0.5,-0.5,
-          -0.5,-0.5, 0.5,
-          -0.5, 0.5, 0.5];
+        //   -0.5, 0.5,-0.5, //Left
+        //   -0.5,-0.5,-0.5,
+        //   -0.5,-0.5, 0.5,
+        //   -0.5, 0.5, 0.5];
+        let positionLocation = 
+        [ -0.5, -0.5,  -0.5,
+          -0.5,  0.5,  -0.5,
+           0.5, -0.5,  -0.5,
+          -0.5,  0.5,  -0.5,
+           0.5,  0.5,  -0.5,
+           0.5, -0.5,  -0.5,
+      
+          -0.5, -0.5,   0.5,
+           0.5, -0.5,   0.5,
+          -0.5,  0.5,   0.5,
+          -0.5,  0.5,   0.5,
+           0.5, -0.5,   0.5,
+           0.5,  0.5,   0.5,
+      
+          -0.5,   0.5, -0.5,
+          -0.5,   0.5,  0.5,
+           0.5,   0.5, -0.5,
+          -0.5,   0.5,  0.5,
+           0.5,   0.5,  0.5,
+           0.5,   0.5, -0.5,
+      
+          -0.5,  -0.5, -0.5,
+           0.5,  -0.5, -0.5,
+          -0.5,  -0.5,  0.5,
+          -0.5,  -0.5,  0.5,
+           0.5,  -0.5, -0.5,
+           0.5,  -0.5,  0.5,
+      
+          -0.5,  -0.5, -0.5,
+          -0.5,  -0.5,  0.5,
+          -0.5,   0.5, -0.5,
+          -0.5,  -0.5,  0.5,
+          -0.5,   0.5,  0.5,
+          -0.5,   0.5, -0.5,
+      
+           0.5,  -0.5, -0.5,
+           0.5,   0.5, -0.5,
+           0.5,  -0.5,  0.5,
+           0.5,  -0.5,  0.5,
+           0.5,   0.5, -0.5,
+           0.5,   0.5,  0.5,];
 
                 
         gl.enableVertexAttribArray(positionLocation);
@@ -70,13 +113,13 @@ class SkyBox{
         let projectionMatrix = this.camera.projectionMatrix;
         // getting a copy with the use of Camera 
         let copy = viewMatrix.clone();  
-        copy[12] = 0;
-        copy[13] = 0;
-        copy[14] = 0;
+        copy[12] = 1;
+        copy[13] = 1;
+        copy[14] = 1;
         copy = M4.invert(copy);
 
         // Set the uniforms
-       let viewMatrixLoc = gl.getUniformLocation(this.program, "u_matrixV");
+        let viewMatrixLoc = gl.getUniformLocation(this.program, "u_matrixV");
         gl.uniformMatrix4fv(viewMatrixLoc, false, copy.toFloat32());
         let projMatrixLoc = gl.getUniformLocation(this.program, "u_matrixP");
         gl.uniformMatrix4fv(projMatrixLoc, false, projectionMatrix.toFloat32());
@@ -89,7 +132,7 @@ class SkyBox{
 
         // Draw the geometry.
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.drawArrays(gl.TRIANGLES, 0, 24, gl.UNSIGNED_SHORT, 0);
+        gl.drawArrays(gl.TRIANGLES, 0, 6*6, gl.UNSIGNED_SHORT, 0);
 
         gl.depthMask(true);
   }
