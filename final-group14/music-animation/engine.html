@@ -179,18 +179,18 @@
             timer += deltaTime;
 
             sphere1.ConstantRotate(8,timer);
-            sphere1.Orbit(star.position, 10, 1, timer);
+            sphere1.Orbit(star.position, 10, 1, timer, 0);
             sphere2.ConstantRotate(8,timer);
-            sphere2.Orbit(star.position, 5, 2, timer);
+            sphere2.Orbit(star.position, 5, 2, timer, 1);
             sphere3.ConstantRotate(5,timer);
-            sphere3.Orbit(star.position, 7, 3, timer);
+            sphere3.Orbit(star.position, 7, 3, timer, -1);
             sphere4.ConstantRotate(1.5,timer);
-            sphere4.Orbit(star.position, 4, 2.5, timer);
+            sphere4.Orbit(star.position, 4, 2.5, timer, 2);
             sphere5.ConstantRotate(3,timer);
-            sphere5.Orbit(star.position, 13, .5, timer);
+            sphere5.Orbit(star.position, 13, .5, timer, -.5);
 
             star.ConstantRotate(2,timer);
-            asteroid.Orbit(sphere1.position, 1.5,  5, timer);
+            asteroid.Orbit(sphere1.position, 1.5,  5, timer,0);
             asteroid.update(); 
             sphere1.update();
             sphere2.update(); 
