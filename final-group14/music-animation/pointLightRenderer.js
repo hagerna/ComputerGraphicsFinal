@@ -50,9 +50,8 @@ class PointLightRenderer{
         gl.enableVertexAttribArray(normalAttribLoc);
         gl.vertexAttribPointer(normalAttribLoc,3,gl.FLOAT,false,0,0);
 
-        //TODO: Link up texcoord-buffer (model.mesh.texcoordBuffer) and
-        // a_texcoord attribute in vertex shader. See normal and position setup
-        // above for reference.
+       
+        //Link up texcoord-buffer (model.mesh.texcoordBuffer) and a_texcoord attribute in vertex shader. 
         gl.bindBuffer(gl.ARRAY_BUFFER, model.mesh.texcoordBuffer);
         let texAttribLoc = gl.getAttribLocation(this.program, "a_texcoord");
         gl.enableVertexAttribArray(texAttribLoc);
