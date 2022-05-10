@@ -52,7 +52,7 @@
         var g_camera;
         var g_cameraController;
 
-        var sphere1, sphere2, sphere3, sphere4, sphere5, cylinder, pyramid, cube, quad, skyBox, star, asteroid;
+        var sphere1, sphere2, sphere3, sphere4, sphere5, cylinder, pyramid, cube, quad, skyBox, star, asteroid1, asteroid2, bigasteroid;
 
         var g_renderer, g_skyBox_renderer, g_pointLightRenderer, g_unlitRenderer;
 
@@ -134,8 +134,10 @@
             let planet5Mat = {tint: new V3(1,1,1), mainTexture: "green"};
 
 
-            let Asteroid1Mesh = OBJLoader.getMesh("Asteroid1Mesh", "resources/asteroid.obj");
-            asteroid = new ModelTransform(Asteroid1Mesh, AsteroidMat);
+            let AsteroidMesh = OBJLoader.getMesh("AsteroidMesh", "resources/asteroid.obj");
+            asteroid1 = new ModelTransform(AsteroidMesh, AsteroidMat);
+            asteroid2 = new ModelTransform(AsteroidMesh, AsteroidMat);
+            bigasteroid = new ModelTransform(AsteroidMesh, AsteroidMat);
             
 
 
@@ -166,8 +168,10 @@
             star.position.set(0,0,-10);
             star.scale.set(3,3,3);
 
-            asteroid.scale.set(.05,.05,.05);
-            asteroid.position.set(1.5,0,-1);
+            asteroid1.scale.set(.05,.05,.05);
+            asteroid2.scale.set(.075,.075,.075);
+            bigasteroid.scale.set(0.25,0.25,0.25);
+            bigasteroid.position.set(1.5,0,-1);
 
             renderLoop = new RenderLoop(draw).start();
         }
@@ -178,20 +182,29 @@
             g_cameraController.update();
             timer += deltaTime;
 
+            // controls of the object oribiting around star  
             sphere1.ConstantRotate(8,timer);
-            sphere1.Orbit(star.position, 10, 1, timer, 0);
+            sphere1.Orbit(star.position, 20, .5, timer, 0);
             sphere2.ConstantRotate(8,timer);
-            sphere2.Orbit(star.position, 5, 2, timer, 1);
+            sphere2.Orbit(star.position, 10, 1, timer, 1);
             sphere3.ConstantRotate(5,timer);
-            sphere3.Orbit(star.position, 7, 3, timer, -1);
+            sphere3.Orbit(star.position, 14, 1.5, timer, -1);
             sphere4.ConstantRotate(1.5,timer);
-            sphere4.Orbit(star.position, 4, 2.5, timer, 2);
+            sphere4.Orbit(star.position, 8, 2, timer, 2);
             sphere5.ConstantRotate(3,timer);
-            sphere5.Orbit(star.position, 13, .5, timer, -.5);
+            sphere5.Orbit(star.position, 26, .25, timer, -.5);
+            bigasteroid.Orbit(star.position, 12, 1, timer, -.5);
 
+            // star constantly spins 
             star.ConstantRotate(2,timer);
-            asteroid.Orbit(sphere1.position, 1.5,  5, timer,0);
-            asteroid.update(); 
+
+            // asteroid movement controls 
+            asteroid1.Orbit(sphere1.position, 1.5,  5, timer,0);
+            asteroid1.update(); 
+            asteroid2.Orbit(sphere1.position, 1.5,  4.5, timer,.5);
+            asteroid2.update(); 
+
+            bigasteroid.update(); 
             sphere1.update();
             sphere2.update(); 
             sphere3.update();
@@ -211,7 +224,9 @@
             g_renderer.drawModel(sphere5, g_camera, shaderData);
 
             g_unlitRenderer.drawModel(star, g_camera, shaderData);
-            g_renderer.drawModel(asteroid, g_camera, shaderData);
+            g_renderer.drawModel(asteroid1, g_camera, shaderData);
+            g_renderer.drawModel(asteroid2, g_camera, shaderData);
+            g_renderer.drawModel(bigasteroid, g_camera, shaderData);
             g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
             g_pointLightRenderer.drawModel(pyramid, g_camera, shaderData);
 
