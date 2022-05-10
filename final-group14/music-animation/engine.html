@@ -116,7 +116,10 @@
             GLUtils.loadTexture("burning-steel", "resources/burning-steel.png");
             GLUtils.loadTexture("gas-planet", "resources/Gas-Giant.png");
             GLUtils.loadTexture("asteroid", "resources/asteroid.png");
-            GLUtils.loadTexture("planet2", "resources/planet2.png");
+            GLUtils.loadTexture("snow", "resources/snow.png");
+            GLUtils.loadTexture("rc", "resources/rainbowCoral.png");
+            GLUtils.loadTexture("coral", "resources/coral.png");
+            GLUtils.loadTexture("green", "resources/green.png");
             // load space box texture
 
             // Material with white tint color
@@ -124,8 +127,12 @@
             let starMat = {tint: new V3(1,1,1), mainTexture: "burning-steel"};
             let starMatCyan = {tint: new V3(1,1,0), mainTexture: "burning-steel"};
             let gasGiantMat = {tint: new V3(1,1,1), mainTexture: "gas-planet"};
-            let AsteroidMat = {tint: new V3(1,1,0), mainTexture: "asteroid"};
-            let planet2Mat = {tint: new V3(1,1,0), mainTexture: "planet2"};
+            let AsteroidMat = {tint: new V3(1,1,1), mainTexture: "asteroid"};
+            let planet2Mat = {tint: new V3(1,1,1), mainTexture: "snow"};
+            let planet3Mat = {tint: new V3(1,1,1), mainTexture: "rc"};
+            let planet4Mat = {tint: new V3(1,1,1), mainTexture: "coral"};
+            let planet5Mat = {tint: new V3(1,1,1), mainTexture: "green"};
+
 
             let Asteroid1Mesh = OBJLoader.getMesh("Asteroid1Mesh", "resources/asteroid.obj");
             asteroid = new ModelTransform(Asteroid1Mesh, AsteroidMat);
@@ -133,24 +140,24 @@
 
 
             sphere1 = new ModelTransform(Primitives.Sphere.getMesh(), gasGiantMat);
-            sphere2 = new ModelTransform(Primitives.Sphere.getMesh(), planet2Mat);
-            sphere3 = new ModelTransform(Primitives.Sphere.getMesh(), uvTestMat);
-            sphere4 = new ModelTransform(Primitives.Sphere.getMesh(), uvTestMat);
-            sphere5 = new ModelTransform(Primitives.Sphere.getMesh(), uvTestMat);
+            sphere2 = new ModelTransform(Primitives.Sphere.getMesh(), planet5Mat);
+            sphere3 = new ModelTransform(Primitives.Sphere.getMesh(), planet3Mat);
+            sphere4 = new ModelTransform(Primitives.Sphere.getMesh(), planet4Mat);
+            sphere5 = new ModelTransform(Primitives.Sphere.getMesh(), planet2Mat);
             cylinder = new ModelTransform(Primitives.Cylinder.getMesh(), starMat);
             pyramid = new ModelTransform(Primitives.Pyramid.getMesh(), starMat);
             star = new ModelTransform(Primitives.Sphere.getMesh(), starMatCyan);
 
             sphere1.position.set(1.5,0,-1.5);
             sphere2.position.set(4,0,-4);
-            // sphere3.position.set(2,0,3);
-            // sphere4.position.set(1,0,-0.5);
-            // sphere5.position.set(-4,0,-2);
+            sphere3.position.set(2,0,-1);
+            sphere4.position.set(1,0,-0.5);
+            sphere5.position.set(-4,0,-2);
 
             sphere2.scale.set(0.5,0.5,0.5); 
-            // sphere3.scale.set(0.5,0.5,0.5)
-            // sphere4.scale.set(1,1,1)
-            // sphere5.scale.set(0.35,0.35,0.35)
+            sphere3.scale.set(0.5,0.5,0.5)
+            sphere4.scale.set(1,1,1)
+            sphere5.scale.set(.75,.75,.75)
 
 
             cylinder.position.set(-1.5,0,-1.5);
@@ -170,21 +177,26 @@
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             g_cameraController.update();
             timer += deltaTime;
+
             sphere1.ConstantRotate(8,timer);
             sphere1.Orbit(star.position, 10, 1, timer);
             sphere2.ConstantRotate(8,timer);
-            sphere2.Orbit(star.position, 5, 1, timer);
-            // sphere3.ConstantRotate(8,timer);
-            // sphere3.Orbit(star.position, 10, 1, timer);
-            // sphere4.ConstantRotate(8,timer);
-            // sphere4.Orbit(star.position, 10, 1, timer);
-            // sphere5.ConstantRotate(8,timer);
-            // sphere5.Orbit(star.position, 10, 1, timer);
+            sphere2.Orbit(star.position, 5, 2, timer);
+            sphere3.ConstantRotate(5,timer);
+            sphere3.Orbit(star.position, 7, 3, timer);
+            sphere4.ConstantRotate(1.5,timer);
+            sphere4.Orbit(star.position, 4, 2.5, timer);
+            sphere5.ConstantRotate(3,timer);
+            sphere5.Orbit(star.position, 13, .5, timer);
+
             star.ConstantRotate(2,timer);
             asteroid.Orbit(sphere1.position, 1.5,  5, timer);
             asteroid.update(); 
             sphere1.update();
             sphere2.update(); 
+            sphere3.update();
+            sphere4.update(); 
+            sphere5.update(); 
             cylinder.update();
             pyramid.update();
             star.update();      
@@ -194,6 +206,10 @@
             skyBox.drawGeometry(g_camera);
             g_renderer.drawModel(sphere1, g_camera, shaderData);
             g_renderer.drawModel(sphere2, g_camera, shaderData);
+            g_renderer.drawModel(sphere3, g_camera, shaderData);
+            g_renderer.drawModel(sphere4, g_camera, shaderData);
+            g_renderer.drawModel(sphere5, g_camera, shaderData);
+
             g_unlitRenderer.drawModel(star, g_camera, shaderData);
             g_renderer.drawModel(asteroid, g_camera, shaderData);
             g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
