@@ -49,7 +49,7 @@ void main(void){
 
     //point light calculations
     vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
-    float light = max(0.0, dot(normal, -surfaceToLightDirection));
+    float light = max(0.0, dot(normal, surfaceToLightDirection));
     vec3 lightColor = u_pointLightColor * light;
     vec3 ambientDiffuse = u_ambientColor + lightColor;
     ambientDiffuse = clamp(ambientDiffuse, vec3(0.0,0.0,0.0), vec3(1.0,1.0,1.0));

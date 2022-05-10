@@ -27,10 +27,16 @@
 
     <script src="howler.js"></script>
 
+    <img id="background" src="resources/SpaceBackground.png" width="2000" height="1000", style="
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+
+    <img id="instructions" src="resources/Instructions.png" width="800" height="500", style="
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -5%);">
+
     <button id="startbutton" width="300" height="300" onclick="load()" style="
-        background-color: #111111; border: none; color: white; padding: 50px 50px; text-align: center;
-        text-decoration: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        font-size: 50px;">Click here to start your journey!</button>
+    background-color: #111111; border: none; color: white; padding: 50px 50px; text-align: center;
+    text-decoration: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 50px;">Click here to start your journey!</button>
 
 
     <script type="text/javascript">
@@ -179,9 +185,9 @@
             timer += deltaTime;
 
             sphere1.ConstantRotate(8,timer);
-            sphere1.Orbit(star.position, 10, 1, timer, 0);
+            sphere1.Orbit(star.position, 10, 1, timer, 0, 35);
             sphere2.ConstantRotate(8,timer);
-            sphere2.Orbit(star.position, 5, 2, timer, 1);
+            sphere2.Orbit(star.position, 5, 2, timer, 1, 5);
             sphere3.ConstantRotate(5,timer);
             sphere3.Orbit(star.position, 7, 3, timer, -1);
             sphere4.ConstantRotate(1.5,timer);
@@ -224,6 +230,9 @@
 
         function load(){
             var button = document.getElementById("startbutton");
+            button.remove();
+            document.getElementById("instructions").disabled = true;
+            document.getElementById("background").disabled = true;
             button.remove();
             setup();
         }

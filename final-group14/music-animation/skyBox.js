@@ -23,7 +23,7 @@ class SkyBox {
 
 
     let positionLocation =
-      [1, 1, 1,
+        [1, 1, 1,
         1, - 1, 1,
         - 1, 1, 1,
         1, - 1, 1,

@@ -153,9 +153,9 @@ class ModelTransform{
     }
 
     // this method works to define the orbiting pattern around a certain target (in most of the cases for our graphic the center star)
-    Orbit(target, distance, speed, timer, plane){
+    Orbit(target, distance, speed, timer, planeHeight = 0, angle = 0){
         this.position.set(distance*Math.cos(timer*speed) + target.x, target.y, distance*Math.sin(timer*speed) + target.z)
-        this.position.y += plane; 
+        this.position.y += planeHeight; 
     }
 
     // this method works to have continue rotation for the planets and stars
