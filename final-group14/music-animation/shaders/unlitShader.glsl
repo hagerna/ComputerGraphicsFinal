@@ -31,9 +31,7 @@ varying vec2 v_texcoord;
 uniform sampler2D u_mainTex;
 
 void main(void){
-    //TODO: Add texture color sampling
     vec3 textureColor = texture2D(u_mainTex, v_texcoord).rgb;
-    //TODO: Blend texture color with tint color for new baseColor
     vec3 finalColor = textureColor * u_tint;
     gl_FragColor = vec4(finalColor, 1);
 }

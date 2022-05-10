@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <title>WebGL Texturing</title>
 </head>
+
 <body>
-	<canvas width="500" height="500" id="webgl-canvas"></canvas>
+    <canvas width="500" height="500" id="webgl-canvas"></canvas>
 
     <script src="../common/webgl-debug.js"></script>
     <script src="../common/math.js"></script>
@@ -58,27 +60,27 @@
         var g_camera;
         var g_cameraController;
 
-        var sphere1, sphere2, sphere3, sphere4, sphere5, cylinder, pyramid, cube, quad, skyBox, star, asteroid;
+        var sphere1, sphere2, sphere3, sphere4, sphere5, cylinder, pyramid, cube, quad, skyBox, star, asteroid1, asteroid2, bigasteroid;
 
         var g_renderer, g_skyBox_renderer, g_pointLightRenderer, g_unlitRenderer;
 
         var timer = 0;
         var music;
 
-        var gui_data = {mute: false};
-        var gui = new dat.GUI({ width: 100 } );
-        gui.add(gui_data, "mute").onChange(function(value){music?.mute(value);});
+        var gui_data = { mute: false };
+        var gui = new dat.GUI({ width: 100 });
+        gui.add(gui_data, "mute").onChange(function (value) { music?.mute(value); });
 
         // lighting
         var g_lightingData = {
             directionalLight: new V3(-0.2, -0.5, -0.5).normalize(), // light direction
             directionalColor: new V3(1.0, 1.0, 1.0), // light color by default white
             ambientColor: new V3(0.2, 0.2, 0.2), // dark gray
-            pointLight: new V3(2,3,0), // point light position
+            pointLight: new V3(2, 3, 0), // point light position
             pointLightColor: new V3(0.98, 0.46, 0), // point light color
         };
 
-        function setup(){
+        function setup() {
             canvas = document.getElementById("webgl-canvas");
             gl = GLUtils.createWebGLInstance(canvas, true);
             gl.clearColor(0.85, 0.95, 0.9, 1); // set clear color (RGBA)
@@ -89,11 +91,11 @@
             // our shader files are loaded here. Once completed, init is called
             // for now there is only the standardShader, but you can add more by
             // simply adding another path into the array shaderPaths.
-            let shaderPaths = ["shaders/standardShader.glsl", "shaders/skyBoxShader.glsl", "shaders/pointLightShader.glsl", "shaders/unlitShader.glsl"]; 
+            let shaderPaths = ["shaders/standardShader.glsl", "shaders/skyBoxShader.glsl", "shaders/pointLightShader.glsl", "shaders/unlitShader.glsl"];
             GLUtils.loadShaders(shaderPaths, init);
         }
 
-        function init(){
+        function init() {
             Input.initialize(canvas);
 
             music = new Howl({
@@ -108,13 +110,13 @@
             g_pointLightRenderer = new PointLightRenderer("pointLightShader");
             g_unlitRenderer = new UnlitRenderer("unlitShader");
 
-            GLUtils.loadCubeMap("skyBox","resources/bkg1_right.png","resources/bkg1_left.png", "resources/bkg1_top.png", "resources/bkg1_bot.png", "resources/bkg1_front.png", "resources/bkg1_back.png"); 
-       
+            GLUtils.loadCubeMap("skyBox", "resources/bkg1_right.png", "resources/bkg1_left.png", "resources/bkg1_top.png", "resources/bkg1_bot.png", "resources/bkg1_front.png", "resources/bkg1_back.png"); // loading our cube map 
+
             g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
             g_cameraController = new InputCameraController(canvas, g_camera);
-            g_cameraController.target.set(0,0,0);
+            g_cameraController.target.set(0, 0, 0);
 
-            skyBox = new SkyBox("skyBoxShader", "skyBox", g_camera); 
+            skyBox = new SkyBox("skyBoxShader", "skyBox", g_camera);
 
             //load texture from resources folder to TextureCache
             //add mainTexture property with loaded texture to material
@@ -129,20 +131,23 @@
             // load space box texture
 
             // Material with white tint color
-            let uvTestMat = {tint: new V3(1,1,1), mainTexture: "uv-test"};
-            let starMat = {tint: new V3(1,1,1), mainTexture: "burning-steel"};
-            let starMatCyan = {tint: new V3(1,1,0), mainTexture: "burning-steel"};
-            let gasGiantMat = {tint: new V3(1,1,1), mainTexture: "gas-planet"};
-            let AsteroidMat = {tint: new V3(1,1,1), mainTexture: "asteroid"};
-            let planet2Mat = {tint: new V3(1,1,1), mainTexture: "snow"};
-            let planet3Mat = {tint: new V3(1,1,1), mainTexture: "rc"};
-            let planet4Mat = {tint: new V3(1,1,1), mainTexture: "coral"};
-            let planet5Mat = {tint: new V3(1,1,1), mainTexture: "green"};
+            let uvTestMat = { tint: new V3(1, 1, 1), mainTexture: "uv-test" };
+            let starMat = { tint: new V3(1, 1, 1), mainTexture: "burning-steel" };
+            let starMatCyan = { tint: new V3(1, 1, 0), mainTexture: "burning-steel" };
+            let gasGiantMat = { tint: new V3(1, 1, 1), mainTexture: "gas-planet" };
+            let AsteroidMat = { tint: new V3(1, 1, 1), mainTexture: "asteroid" };
+            let planet2Mat = { tint: new V3(1, 1, 1), mainTexture: "snow" };
+            let planet3Mat = { tint: new V3(1, 1, 1), mainTexture: "rc" };
+            let planet4Mat = { tint: new V3(1, 1, 1), mainTexture: "coral" };
+            let planet5Mat = { tint: new V3(1, 1, 1), mainTexture: "green" };
 
 
-            let Asteroid1Mesh = OBJLoader.getMesh("Asteroid1Mesh", "resources/asteroid.obj");
-            asteroid = new ModelTransform(Asteroid1Mesh, AsteroidMat);
-            
+            // loading our originally created asteroid object 
+            let AsteroidMesh = OBJLoader.getMesh("AsteroidMesh", "resources/asteroid.obj");
+            asteroid1 = new ModelTransform(AsteroidMesh, AsteroidMat);
+            asteroid2 = new ModelTransform(AsteroidMesh, AsteroidMat);
+            bigasteroid = new ModelTransform(AsteroidMesh, AsteroidMat);
+
 
 
             sphere1 = new ModelTransform(Primitives.Sphere.getMesh(), gasGiantMat);
@@ -154,31 +159,33 @@
             pyramid = new ModelTransform(Primitives.Pyramid.getMesh(), starMat);
             star = new ModelTransform(Primitives.Sphere.getMesh(), starMatCyan);
 
-            sphere1.position.set(1.5,0,-1.5);
-            sphere2.position.set(4,0,-4);
-            sphere3.position.set(2,0,-1);
-            sphere4.position.set(1,0,-0.5);
-            sphere5.position.set(-4,0,-2);
+            sphere1.position.set(1.5, 0, -1.5);
+            sphere2.position.set(4, 0, -4);
+            sphere3.position.set(2, 0, -1);
+            sphere4.position.set(1, 0, -0.5);
+            sphere5.position.set(-4, 0, -2);
 
-            sphere2.scale.set(0.5,0.5,0.5); 
-            sphere3.scale.set(0.5,0.5,0.5)
-            sphere4.scale.set(1,1,1)
-            sphere5.scale.set(.75,.75,.75)
+            sphere2.scale.set(0.5, 0.5, 0.5);
+            sphere3.scale.set(0.5, 0.5, 0.5)
+            sphere4.scale.set(1, 1, 1)
+            sphere5.scale.set(.75, .75, .75)
 
 
-            cylinder.position.set(-1.5,0,-1.5);
-            pyramid.position.set(1.5,0.5,1.5);
+            cylinder.position.set(-1.5, 0, -1.5);
+            pyramid.position.set(1.5, 0.5, 1.5);
 
-            star.position.set(0,0,-10);
-            star.scale.set(3,3,3);
+            star.position.set(0, 0, -10);
+            star.scale.set(3, 3, 3);
 
-            asteroid.scale.set(.05,.05,.05);
-            asteroid.position.set(1.5,0,-1);
+            asteroid1.scale.set(.05, .05, .05);
+            asteroid2.scale.set(.075, .075, .075);
+            bigasteroid.scale.set(0.25, 0.25, 0.25);
+            bigasteroid.position.set(1.5, 0, -1);
 
             renderLoop = new RenderLoop(draw).start();
         }
 
-        function draw(deltaTime){
+        function draw(deltaTime) {
             Input.update();
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             g_cameraController.update();
@@ -195,20 +202,28 @@
             sphere5.ConstantRotate(3,timer);
             sphere5.Orbit(star.position, 13, .5, timer, -.5);
 
-            star.ConstantRotate(2,timer);
-            asteroid.Orbit(sphere1.position, 1.5,  5, timer,0);
-            asteroid.update(); 
+            // star constantly spins 
+            star.ConstantRotate(2, timer);
+
+            // asteroid movement controls 
+            asteroid1.Orbit(sphere1.position, 1.5, 5, timer, 0);
+            asteroid1.update();
+            asteroid2.Orbit(sphere1.position, 1.5, 4.5, timer, .5);
+            asteroid2.update();
+
+            bigasteroid.update();
             sphere1.update();
-            sphere2.update(); 
+            sphere2.update();
             sphere3.update();
-            sphere4.update(); 
-            sphere5.update(); 
+            sphere4.update();
+            sphere5.update();
             cylinder.update();
             pyramid.update();
-            star.update();      
+            star.update();
 
-            let shaderData = { lightingData: g_lightingData};
+            let shaderData = { lightingData: g_lightingData };
 
+            // drawing everything on the screen 
             skyBox.drawGeometry(g_camera);
             g_renderer.drawModel(sphere1, g_camera, shaderData);
             g_renderer.drawModel(sphere2, g_camera, shaderData);
@@ -217,18 +232,20 @@
             g_renderer.drawModel(sphere5, g_camera, shaderData);
 
             g_unlitRenderer.drawModel(star, g_camera, shaderData);
-            g_renderer.drawModel(asteroid, g_camera, shaderData);
+            g_renderer.drawModel(asteroid1, g_camera, shaderData);
+            g_renderer.drawModel(asteroid2, g_camera, shaderData);
+            g_renderer.drawModel(bigasteroid, g_camera, shaderData);
             g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
             g_pointLightRenderer.drawModel(pyramid, g_camera, shaderData);
 
-        
+
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
             gl.enable(gl.CULL_FACE);
             gl.enable(gl.DEPTH_TEST);
         }
 
-        function load(){
+        function load() {
             var button = document.getElementById("startbutton");
             button.remove();
             document.getElementById("instructions").disabled = true;
@@ -238,4 +255,5 @@
         }
     </script>
 </body>
+
 </html>

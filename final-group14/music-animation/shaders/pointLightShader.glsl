@@ -54,9 +54,7 @@ void main(void){
     vec3 ambientDiffuse = u_ambientColor + lightColor;
     ambientDiffuse = clamp(ambientDiffuse, vec3(0.0,0.0,0.0), vec3(1.0,1.0,1.0));
 
-    //TODO: Add texture color sampling
     vec3 textureColor = texture2D(u_mainTex, v_texcoord).rgb;
-    //TODO: Blend texture color with tint color for new baseColor
     vec3 baseColor = textureColor * u_tint;
     vec3 finalColor = ambientDiffuse * baseColor; // apply lighting to color
 
