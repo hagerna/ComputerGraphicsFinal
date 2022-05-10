@@ -247,10 +247,11 @@
 
         function load() {
             var button = document.getElementById("startbutton");
-            button.remove();
-            document.getElementById("instructions").disabled = true;
-            document.getElementById("background").disabled = true;
-            button.remove();
+            var background = document.getElementById("background");
+            var instructions = document.getElementById("instructions");
+            background.remove(); 
+            instructions.remove(); 
+            button.remove(); 
             setup();
         }
     </script>
