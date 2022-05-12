@@ -76,8 +76,8 @@
             directionalLight: new V3(-0.2, -0.5, -0.5).normalize(), // light direction
             directionalColor: new V3(1.0, 1.0, 1.0), // light color by default white
             ambientColor: new V3(0.2, 0.2, 0.2), // dark gray
-            pointLight: new V3(2, 3, 0), // point light position
-            pointLightColor: new V3(0.98, 0.46, 0), // point light color
+            pointLight: new V3(0, 0, -10), // point light position
+            pointLightColor: new V3(1,1,1), //0.98, 0.46, 0), point light color
         };
 
         function setup() {
@@ -133,7 +133,6 @@
             // Material with white tint color
             let uvTestMat = { tint: new V3(1, 1, 1), mainTexture: "uv-test" };
             let starMat = { tint: new V3(1, 1, 1), mainTexture: "burning-steel" };
-            let starMatCyan = { tint: new V3(1, 1, 0), mainTexture: "burning-steel" };
             let gasGiantMat = { tint: new V3(1, 1, 1), mainTexture: "gas-planet" };
             let AsteroidMat = { tint: new V3(1, 1, 1), mainTexture: "asteroid" };
             let planet2Mat = { tint: new V3(1, 1, 1), mainTexture: "snow" };
@@ -155,9 +154,7 @@
             sphere3 = new ModelTransform(Primitives.Sphere.getMesh(), planet3Mat);
             sphere4 = new ModelTransform(Primitives.Sphere.getMesh(), planet4Mat);
             sphere5 = new ModelTransform(Primitives.Sphere.getMesh(), planet2Mat);
-            cylinder = new ModelTransform(Primitives.Cylinder.getMesh(), starMat);
-            pyramid = new ModelTransform(Primitives.Pyramid.getMesh(), starMat);
-            star = new ModelTransform(Primitives.Sphere.getMesh(), starMatCyan);
+            star = new ModelTransform(Primitives.Sphere.getMesh(), starMat);
 
             sphere1.position.set(1.5, 0, -1.5);
             sphere2.position.set(4, 0, -4);
@@ -169,10 +166,6 @@
             sphere3.scale.set(0.5, 0.5, 0.5)
             sphere4.scale.set(1, 1, 1)
             sphere5.scale.set(.75, .75, .75)
-
-
-            cylinder.position.set(-1.5, 0, -1.5);
-            pyramid.position.set(1.5, 0.5, 1.5);
 
             star.position.set(0, 0, -10);
             star.scale.set(3, 3, 3);
@@ -218,27 +211,22 @@
             sphere3.update();
             sphere4.update();
             sphere5.update();
-            cylinder.update();
-            pyramid.update();
             star.update();
 
             let shaderData = { lightingData: g_lightingData };
 
             // drawing everything on the screen 
             skyBox.drawGeometry(g_camera);
-            g_renderer.drawModel(sphere1, g_camera, shaderData);
-            g_renderer.drawModel(sphere2, g_camera, shaderData);
-            g_renderer.drawModel(sphere3, g_camera, shaderData);
-            g_renderer.drawModel(sphere4, g_camera, shaderData);
-            g_renderer.drawModel(sphere5, g_camera, shaderData);
+            g_pointLightRenderer.drawModel(sphere1, g_camera, shaderData);
+            g_pointLightRenderer.drawModel(sphere2, g_camera, shaderData);
+            g_pointLightRenderer.drawModel(sphere3, g_camera, shaderData);
+            g_pointLightRenderer.drawModel(sphere4, g_camera, shaderData);
+            g_pointLightRenderer.drawModel(sphere5, g_camera, shaderData);
 
             g_unlitRenderer.drawModel(star, g_camera, shaderData);
-            g_renderer.drawModel(asteroid1, g_camera, shaderData);
-            g_renderer.drawModel(asteroid2, g_camera, shaderData);
-            g_renderer.drawModel(bigasteroid, g_camera, shaderData);
-            g_pointLightRenderer.drawModel(cylinder, g_camera, shaderData);
-            g_pointLightRenderer.drawModel(pyramid, g_camera, shaderData);
-
+            g_pointLightRenderer.drawModel(asteroid1, g_camera, shaderData);
+            g_pointLightRenderer.drawModel(asteroid2, g_camera, shaderData);
+            g_pointLightRenderer.drawModel(bigasteroid, g_camera, shaderData);
 
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 

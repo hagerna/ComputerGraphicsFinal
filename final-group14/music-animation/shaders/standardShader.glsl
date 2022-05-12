@@ -13,8 +13,6 @@ uniform mat4 u_matrixV; // the view matrix of the camera
 uniform mat4 u_matrixP; // the projection matrix of the camera
 uniform mat3 u_matrixInvTransM;
 varying vec3 v_normal;    // normal to forward to the fragment shader
-
-
 varying vec2 v_texcoord;
 
 void main() {
