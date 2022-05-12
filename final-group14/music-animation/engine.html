@@ -156,6 +156,7 @@
             sphere5 = new ModelTransform(Primitives.Sphere.getMesh(), planet2Mat);
             star = new ModelTransform(Primitives.Sphere.getMesh(), starMat);
 
+            // setting position 
             sphere1.position.set(1.5, 0, -1.5);
             sphere2.position.set(4, 0, -4);
             sphere3.position.set(2, 0, -1);
@@ -185,15 +186,15 @@
             timer += deltaTime;
 
             sphere1.ConstantRotate(8,timer);
-            sphere1.Orbit(star.position, 10, 1, timer, 0);
-            sphere2.ConstantRotate(8,timer, -5, -10);
-            sphere2.Orbit(star.position, 5, 2, timer, 1);
+            sphere1.Orbit(star.position, 20, .5, timer, 0);
+            sphere2.ConstantRotate(8,timer, -2.5, -10);
+            sphere2.Orbit(star.position, 10, 1, timer, 1);
             sphere3.ConstantRotate(5,timer);
-            sphere3.Orbit(star.position, 7, 3, timer, -1);
+            sphere3.Orbit(star.position, 14, 1.5, timer, -1);
             sphere4.ConstantRotate(1.5,timer);
-            sphere4.Orbit(star.position, 4, 2.5, timer, 2);
-            sphere5.ConstantRotate(3,timer, 5, 10);
-            sphere5.Orbit(star.position, 13, .5, timer, -.5);
+            sphere4.Orbit(star.position, 8, 1, timer, 2);
+            sphere5.ConstantRotate(3,timer, 2.5, 10);
+            sphere5.Orbit(star.position, 26, .25, timer, -.5);
 
             // star constantly spins 
             star.ConstantRotate(2, timer);
@@ -205,6 +206,7 @@
             asteroid2.update();
 
             bigasteroid.ConstantRotate(1, timer, 10);
+            bigasteroid.Orbit(star.position, 5, .5, timer, 0);
             bigasteroid.update();
             sphere1.update();
             sphere2.update();
