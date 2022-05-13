@@ -76,6 +76,8 @@ class PointLightRenderer{
         gl.uniformMatrix4fv(viewMatrixLoc, false, viewMatrix.toFloat32());
         let projMatrixLoc = gl.getUniformLocation(this.program, "u_matrixP");
         gl.uniformMatrix4fv(projMatrixLoc, false, projectionMatrix.toFloat32());
+        let worldMatLoc = gl.getUniformLocation(this.program, "u_world");
+        gl.uniformMatrix4fv(worldMatLoc, false, model.modelMatrix.toFloat32());
 
         // set tint color data
         let colorLoc = gl.getUniformLocation(this.program, "u_tint");
