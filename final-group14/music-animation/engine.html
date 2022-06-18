@@ -113,7 +113,7 @@
             GLUtils.loadCubeMap("skyBox", "resources/bkg1_right.png", "resources/bkg1_left.png", "resources/bkg1_top.png", "resources/bkg1_bot.png", "resources/bkg1_front.png", "resources/bkg1_back.png"); // loading our cube map 
 
             g_camera = new PerspectiveCamera(45, 0.1, 1000, canvas.width / canvas.height);
-            g_cameraController = new InputCameraController(canvas, g_camera);
+            g_cameraController = new OrbiterCameraController(canvas, g_camera);
             g_cameraController.target.set(0, 0, 0);
 
             skyBox = new SkyBox("skyBoxShader", "skyBox", g_camera);
