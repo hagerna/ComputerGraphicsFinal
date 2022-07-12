@@ -11,11 +11,17 @@ Open up repository in a code editor and use "go live" feature.
 
 # Instructions 
 Q: rotate clockwise
+#
 W: move forward
+#
 E: roate counter clockwise 
+#
 A: go left
+#
 S: go backwards
+#
 D: go right
+#
 R: freeze
 
 
