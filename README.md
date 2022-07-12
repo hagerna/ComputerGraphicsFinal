@@ -1,5 +1,5 @@
 # ComputerGraphicsFinal
-Final Project for Computer Graphics: Programming 3D Applications (DIS Spring 2022)
+Final Project for Computer Graphics: Programming 3D Applications (DIS Spring 2022) Nick Hager and Julia Kispert 
 
 Project allows a user to go through a different universe in space using keys on their keyboard. Turn up volume for a fun surpise!  
 
@@ -23,7 +23,7 @@ Start Screen:
 <img width="1269" alt="Screen Shot 2022-07-12 at 9 04 16 AM" src="https://user-images.githubusercontent.com/54856485/178508897-1c3aef21-8505-4c20-830c-19a7567af22c.png">
 
 
-#Future Progress: 
+# Future Goals: 
 - prevent users from going through planets
 - add in different floating objects through space (not in orbit)
 - change movement 
